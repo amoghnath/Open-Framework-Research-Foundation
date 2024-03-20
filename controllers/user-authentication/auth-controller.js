@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const Uploader = require('../../models/Uploader');
-const Solver = require('../../models/Solver');
+const Solver = require('../../models/Solver'); // Assuming you have a similar structure for Solver model
 const bcrypt = require('bcryptjs');
 
 const authController = {
@@ -14,42 +14,45 @@ const authController = {
             }
 
             // Find the user by email depending on the role
-            const User = role === 'uploader' ? Uploader : Solver;
-            const user = await User.findOne({ where: { email } });
+            let user;
+            if (role === 'uploader') {
+                user = await Uploader.findOne({ where: { uploaderEmail: email } });
+            } else if (role === 'solver') {
+                // Assuming the Solver model has a field named 'solverEmail'
+                user = await Solver.findOne({ where: { solverEmail: email } });
+            }
 
             if (!user) {
                 return res.status(401).json({ message: 'Authentication failed. User not found.' });
             }
 
             // Check if the password is correct
-            const isMatch = await bcrypt.compare(password, user.password);
+            const userPassword = role === 'uploader' ? user.uploaderPassword : user.solverPassword; // Adjust if Solver model has a different field name for password
+            const isMatch = await bcrypt.compare(password, userPassword);
             if (!isMatch) {
                 return res.status(401).json({ message: 'Authentication failed. Wrong password.' });
             }
 
-            // Generate JWT payload differently for uploader and solver
+            // Generate JWT payload
             let userDetails;
             if (role === 'uploader') {
                 userDetails = {
-                    id: user.id,
-                    email: user.email,
+                    uploaderId: user.uploaderId,
                     role: role,
-                    fullName: user.uploaderFullName,
-                    phoneNumber: user.uploaderPhoneNumber,
-                    businessName: user.uploaderBusinessName,
-                    businessEmail: user.uploaderBusinessEmail,
-                    businessAddress: user.uploaderBusinessAddress
+                    uploaderEmail: user.uploaderEmail,
+                    uploaderFullName: user.uploaderFullName,
+                    uploaderBusinessName: user.uploaderBusinessName,
+                    uploaderBusinessEmail: user.uploaderBusinessEmail,
                 };
             } else if (role === 'solver') {
+                // Adjust the details according to the Solver model
                 userDetails = {
-                    id: user.id,
-                    email: user.email,
+                    solverId: user.solverId,
                     role: role,
-                    fullName: user.solverFullName,
-                    phoneNumber: user.solverPhoneNumber,
-                    universityName: user.solverUniversityName,
-                    universityEmail: user.solverUniversityEmail,
-                    universityAddress: user.solverUniversityAddress
+                    solverEmail: user.solverEmail,
+                    solverFullName: user.solverFullName,
+                    solverUniversityName: user.solverUniversityName,
+                    solverUniversityEmail: user.solverUniversityEmail,
                 };
             }
 
@@ -59,7 +62,7 @@ const authController = {
             // Send the JWT as a cookie in the response
             res.cookie("user-session-token", token, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production", // Use secure in production
+                secure: process.env.NODE_ENV === "production",
                 maxAge: 3600000, // 1 hour
             });
 

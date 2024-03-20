@@ -1,6 +1,6 @@
 const express = require("express");
-const uploaderController = require("../controllers/user-registration/register-uploader");
-const solverController = require("../controllers/user-registration/register-solver");
+const uploaderController = require("../controllers/user-registration/register-uploader-controller");
+const solverController = require("../controllers/user-registration/register-solver-controller");
 
 const router = express.Router();
 

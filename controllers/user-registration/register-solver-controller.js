@@ -16,6 +16,7 @@ const solverController = {
 
             // Trim the string fields to remove leading/trailing spaces
             solverEmail = solverEmail.trim();
+            solverPassword = solverPassword.trim();
             solverFullName = solverFullName.trim();
             solverPhoneNumber = solverPhoneNumber.trim();
             solverUniversityName = solverUniversityName.trim();
