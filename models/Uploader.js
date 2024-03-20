@@ -1,15 +1,16 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
+const bcrypt = require("bcrypt");
 
-// First, define the Uploader model
+// Define the Uploader model
 const Uploader = sequelize.define(
     "Uploader",
     {
         // Define attributes (table columns)
         uploaderId: {
-            type: DataTypes.UUID, // Use UUID as the data type for the ID
+            type: DataTypes.UUID,
             primaryKey: true,
-            defaultValue: DataTypes.UUIDV4, // Automatically generate a UUID for new records
+            defaultValue: DataTypes.UUIDV4,
             allowNull: false,
         },
         uploaderEmail: {
@@ -17,7 +18,7 @@ const Uploader = sequelize.define(
             allowNull: false,
             unique: true,
             validate: {
-                isEmail: true, // Validates that the string is an email
+                isEmail: true,
             },
         },
         uploaderPassword: {
@@ -26,38 +27,47 @@ const Uploader = sequelize.define(
         },
         uploaderFullName: {
             type: DataTypes.STRING,
-            allowNull: false, // Assuming every uploader must have a name
+            allowNull: false,
         },
         uploaderPhoneNumber: {
             type: DataTypes.STRING,
-            allowNull: false, // Assuming a phone number is required
-            unique: true, // Assuming phone numbers must be unique
+            allowNull: false,
+            unique: true,
             validate: {
-                isNumeric: true, // Validates that the string contains only numbers
-                len: [10, 10], // Validates that the string is exactly 10 characters long
+                isNumeric: true,
+                len: [10, 10],
             },
         },
         uploaderBusinessName: {
             type: DataTypes.STRING,
-            allowNull: false, // Assuming every uploader has a business name
+            allowNull: false,
         },
         uploaderBusinessEmail: {
             type: DataTypes.STRING,
-            allowNull: false, // Assuming a business email is required
-            unique: true, // Assuming business emails must be unique
+            allowNull: false,
+            unique: true,
             validate: {
-                isEmail: true, // Validates that the string is an email
+                isEmail: true,
             },
         },
         uploaderBusinessAddress: {
-            type: DataTypes.TEXT, // TEXT type is used for longer strings
-            allowNull: false, // Assuming a business address is required
+            type: DataTypes.TEXT,
+            allowNull: false,
         },
     },
     {
-        // Additional model options
-        tableName: "Uploaders", // Explicitly specify the table name
-        timestamps: true, // Sequelize automatically adds createdAt and updatedAt fields
+        tableName: "Uploaders",
+        timestamps: true,
+
+        // Add Sequelize hooks for hashing the password
+        hooks: {
+            beforeCreate: async (uploader) => {
+                if (uploader.uploaderPassword) {
+                    const salt = await bcrypt.genSalt(10);
+                    uploader.uploaderPassword = await bcrypt.hash(uploader.uploaderPassword, salt);
+                }
+            }
+        }
     }
 );
 

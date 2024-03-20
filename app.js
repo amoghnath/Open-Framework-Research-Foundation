@@ -1,3 +1,6 @@
+require('dotenv').config();
+const cookieParser = require("cookie-parser");
+
 // Import necessary modules
 const express = require('express');
 const helmet = require('helmet');
@@ -5,7 +8,16 @@ const sequelize = require('./config/db');
 
 // Initialize Express app
 const app = express();
+
+// Use middleware
+app.use(cookieParser());
 app.use(helmet());
+app.use(express.json()); // Parse JSON bodies
+
+// Use the routers with their respective base paths
+app.use('/api/auth', loginRouter);
+app.use('/api/register', registrationRouter);
+
 
 // Test database connection and sync models
 async function assertDatabaseConnectionOk() {

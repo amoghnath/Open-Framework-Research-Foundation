@@ -1,14 +1,15 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/db"); // Ensure this path points to your Sequelize instance
+const sequelize = require("../config/db");
+const bcrypt = require("bcrypt");
 
 const Solver = sequelize.define(
     "Solver",
     {
         // Define model attributes
         solverId: {
-            type: DataTypes.UUID, // Use UUID as the data type for the ID
+            type: DataTypes.UUID,
             primaryKey: true,
-            defaultValue: DataTypes.UUIDV4, // Automatically generate a UUID for new records
+            defaultValue: DataTypes.UUIDV4,
             allowNull: false,
         },
         solverEmail: {
@@ -16,7 +17,7 @@ const Solver = sequelize.define(
             allowNull: false,
             unique: true,
             validate: {
-                isEmail: true, // Validates the email format
+                isEmail: true,
             },
         },
         solverPassword: {
@@ -27,17 +28,15 @@ const Solver = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
-
         solverPhoneNumber: {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
             validate: {
-                isNumeric: true, // Validates that the string contains only numbers
-                len: [10, 15], // Assumes phone numbers are between 10 and 15 characters
+                isNumeric: true,
+                len: [10, 15],
             },
         },
-
         solverUniversityName: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -47,18 +46,27 @@ const Solver = sequelize.define(
             allowNull: false,
             unique: true,
             validate: {
-                isEmail: true, // Validates the email format
+                isEmail: true,
             },
         },
         solverUniversityAddress: {
-            type: DataTypes.TEXT, // TEXT type is used for longer strings
-            allowNull: false, // Assuming a business address is required
+            type: DataTypes.TEXT,
+            allowNull: false,
         },
     },
     {
-        // Model options
-        tableName: "Solvers", // Explicitly specifies table name
-        timestamps: true, // Adds createdAt and updatedAt timestamps
+        tableName: "Solvers",
+        timestamps: true,
+
+        // Add Sequelize hooks for hashing the password
+        hooks: {
+            beforeCreate: async (solver) => {
+                if (solver.solverPassword) {
+                    const salt = await bcrypt.genSalt(10);
+                    solver.solverPassword = await bcrypt.hash(solver.solverPassword, salt);
+                }
+            }
+        }
     }
 );
 
