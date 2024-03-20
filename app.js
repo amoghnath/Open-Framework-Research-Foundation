@@ -7,6 +7,7 @@ const sequelize = require('./config/db');
 
 const registrationRouter = require('./routes/user-registration-router');
 const loginRouter = require('./routes/user-auth-router');
+const problemRouter = require('./routes/problem-router');
 
 // Initialize Express app
 const app = express();
@@ -19,6 +20,7 @@ app.use(express.json()); // Parse JSON bodies
 // Use the routers with their respective base paths
 app.use('/api/auth', loginRouter);
 app.use('/api/register', registrationRouter);
+app.use('/api/problem', problemRouter)
 
 // Test database connection and sync models
 async function assertDatabaseConnectionOk() {

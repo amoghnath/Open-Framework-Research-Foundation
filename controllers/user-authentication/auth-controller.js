@@ -37,22 +37,18 @@ const authController = {
             let userDetails;
             if (role === 'uploader') {
                 userDetails = {
-                    uploaderId: user.uploaderId,
                     role: role,
+                    uploaderId: user.uploaderId,
                     uploaderEmail: user.uploaderEmail,
                     uploaderFullName: user.uploaderFullName,
-                    uploaderBusinessName: user.uploaderBusinessName,
-                    uploaderBusinessEmail: user.uploaderBusinessEmail,
                 };
             } else if (role === 'solver') {
                 // Adjust the details according to the Solver model
                 userDetails = {
-                    solverId: user.solverId,
                     role: role,
+                    solverId: user.solverId,
                     solverEmail: user.solverEmail,
                     solverFullName: user.solverFullName,
-                    solverUniversityName: user.solverUniversityName,
-                    solverUniversityEmail: user.solverUniversityEmail,
                 };
             }
 
