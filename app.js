@@ -1,10 +1,12 @@
+// Import necessary modules
 require('dotenv').config();
 const cookieParser = require("cookie-parser");
-
-// Import necessary modules
 const express = require('express');
 const helmet = require('helmet');
 const sequelize = require('./config/db');
+
+const registrationRouter = require('./routes/user-registration-router');
+const loginRouter = require('./routes/user-auth-router');
 
 // Initialize Express app
 const app = express();
@@ -17,7 +19,6 @@ app.use(express.json()); // Parse JSON bodies
 // Use the routers with their respective base paths
 app.use('/api/auth', loginRouter);
 app.use('/api/register', registrationRouter);
-
 
 // Test database connection and sync models
 async function assertDatabaseConnectionOk() {
@@ -38,7 +39,7 @@ const PORT = process.env.PORT || 3000;
 
 // Define a route for GET requests to the root URL ('/')
 app.get('/', (req, res) => {
-    res.send('Hello World!');
+    res.send('Express server running on port 3000');
 });
 
 // Start the server after ensuring the database is connected and synced
