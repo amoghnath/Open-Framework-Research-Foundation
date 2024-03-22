@@ -6,9 +6,10 @@ const sequelize = require("./config/db");
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
-const { ProblemSwaggerSchema } = require("./models/Problem");
 const { UploaderSwaggerSchema } = require("./models/Uploader");
 const { SolverSwaggerSchema } = require("./models/Solver");
+const { ProblemSwaggerSchema } = require("./models/Problem");
+const { SolutionSwaggerSchema } = require("./models/Solution");
 
 const registrationRouter = require("./routes/user-registration-router");
 const loginRouter = require("./routes/user-auth-router");
@@ -31,6 +32,7 @@ const swaggerOptions = {
                 ...UploaderSwaggerSchema,
                 ...SolverSwaggerSchema,
                 ...ProblemSwaggerSchema,
+                ...SolutionSwaggerSchema,
             }
         },
         servers: [
@@ -40,7 +42,7 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ["./routes/*.js"],
+    apis: ["./routes/*.js", "./controllers/*/*.js"],
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);

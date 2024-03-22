@@ -1,4 +1,4 @@
-const Solution = require("../../models/Solution");
+const { Solution } = require("../../models/Solution");
 const jwt = require("jsonwebtoken");
 
 const solutionController = {

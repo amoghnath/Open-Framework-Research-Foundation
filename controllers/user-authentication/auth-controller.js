@@ -4,6 +4,55 @@ const Solver = require("../../models/Solver"); // Assuming you have a similar st
 const bcrypt = require("bcryptjs");
 
 const authController = {
+    /**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: User authentication
+ *     description: Login endpoint for uploader or solver. Returns a JWT token if authentication is successful.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - role
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: Email of the user
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: Password of the user
+ *               role:
+ *                 type: string
+ *                 description: Role of the user (uploader or solver)
+ *     responses:
+ *       200:
+ *         description: Authentication successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 token:
+ *                   type: string
+ *                   format: jwt
+ *       401:
+ *         description: Authentication failed
+ *       400:
+ *         description: Invalid role specified
+ *       500:
+ *         description: Error during authentication
+ */
+
     async login(req, res) {
         try {
             const { email, password, role } = req.body;
@@ -72,6 +121,26 @@ const authController = {
             res.status(500).json({ message: "Error during authentication", error: error.message });
         }
     },
+
+    /**
+     * @swagger
+     * /auth/logout:
+     *   post:
+     *     summary: User logout
+     *     description: Logout endpoint for the user. Clears the user's session token.
+     *     responses:
+     *       200:
+     *         description: Logout successful
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 message:
+     *                   type: string
+     *       500:
+     *         description: Error during logout
+     */
 
     async logout(req, res) {
         try {
