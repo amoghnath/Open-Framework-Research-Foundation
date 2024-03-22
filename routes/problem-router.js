@@ -4,7 +4,7 @@ const problemController = require("../controllers/problems/problem-controller");
 
 const router = express.Router();
 
-router.get("/", authenticateToken, problemController.readAll)
+router.get("/", problemController.readAll)
 router.post("/", authenticateToken, requireRole('uploader'), problemController.create);
 router.get("/:problemId", authenticateToken, problemController.read);
 
