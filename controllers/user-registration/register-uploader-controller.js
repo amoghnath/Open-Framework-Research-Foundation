@@ -1,5 +1,5 @@
-const Uploader = require('../../models/Uploader'); // Adjust the path based on your project structure
-const { Op } = require('sequelize'); // Make sure to import Op from sequelize
+const Uploader = require("../../models/Uploader"); // Adjust the path based on your project structure
+const { Op } = require("sequelize"); // Make sure to import Op from sequelize
 
 const uploaderController = {
     async register(req, res) {
@@ -37,7 +37,7 @@ const uploaderController = {
 
             if (existingUploader) {
                 return res.status(400).json({
-                    message: 'Registration failed: email, phone number, or business email already in use.'
+                    message: "Registration failed: email, phone number, or business email already in use."
                 });
             }
 
@@ -54,13 +54,13 @@ const uploaderController = {
 
             // Send a response with the newly created uploader data
             res.status(201).json({
-                message: 'Uploader registered successfully',
+                message: "Uploader registered successfully",
                 uploader: newUploader
             });
 
         } catch (error) {
             res.status(400).json({
-                message: 'Error registering uploader',
+                message: "Error registering uploader",
                 error: error.message
             });
         }

@@ -16,7 +16,7 @@ const Problem = sequelize.define(
             allowNull: false,
             references: {
                 model: Uploader,
-                key: 'uploaderId'
+                key: "uploaderId"
             }
         },
         problemTitle: {
@@ -43,7 +43,7 @@ const Problem = sequelize.define(
 );
 
 // Define the association with Uploader (if not already defined in Uploader model)
-Problem.belongsTo(Uploader, { foreignKey: 'uploaderId' });
-Uploader.hasMany(Problem, { foreignKey: 'uploaderId' });
+Problem.belongsTo(Uploader, { foreignKey: "uploaderId" });
+Uploader.hasMany(Problem, { foreignKey: "uploaderId" });
 
 module.exports = Problem;

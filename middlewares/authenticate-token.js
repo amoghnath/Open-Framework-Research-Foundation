@@ -1,23 +1,23 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 // This function can be used directly in route definitions to protect endpoints
 const authenticateToken = (req, res, next) => {
-    const token = req.cookies['user-session-token'];
+    const token = req.cookies["user-session-token"];
 
     if (!token) {
-        return res.status(401).json({ message: 'Access denied. No token provided.' });
+        return res.status(401).json({ message: "Access denied. No token provided." });
     }
 
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         if (err) {
-            if (err.name === 'TokenExpiredError') {
-                return res.status(401).json({ message: 'Session expired. Please log in again.' });
-            } else if (err.name === 'JsonWebTokenError') {
-                return res.status(403).json({ message: 'Invalid token. Please log in again.' });
-            } else if (err.name === 'NotBeforeError') {
-                return res.status(403).json({ message: 'Token not active. Please try again later.' });
+            if (err.name === "TokenExpiredError") {
+                return res.status(401).json({ message: "Session expired. Please log in again." });
+            } else if (err.name === "JsonWebTokenError") {
+                return res.status(403).json({ message: "Invalid token. Please log in again." });
+            } else if (err.name === "NotBeforeError") {
+                return res.status(403).json({ message: "Token not active. Please try again later." });
             } else {
-                return res.status(403).json({ message: 'Token verification failed.' });
+                return res.status(403).json({ message: "Token verification failed." });
             }
         }
 

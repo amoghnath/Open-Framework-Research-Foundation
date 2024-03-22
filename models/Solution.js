@@ -19,7 +19,7 @@ const Solution = sequelize.define(
             allowNull: false,
             references: {
                 model: Solver,
-                key: 'solverId',
+                key: "solverId",
             }
         },
         problemId: { // Add problemId to reference the Problem model
@@ -27,7 +27,7 @@ const Solution = sequelize.define(
             allowNull: false,
             references: {
                 model: Problem,
-                key: 'problemId',
+                key: "problemId",
             }
         },
         solutionTitle: {
@@ -46,10 +46,10 @@ const Solution = sequelize.define(
 );
 
 // Associations
-Solution.belongsTo(Solver, { foreignKey: 'solverId' });
-Solver.hasMany(Solution, { foreignKey: 'solverId' });
+Solution.belongsTo(Solver, { foreignKey: "solverId" });
+Solver.hasMany(Solution, { foreignKey: "solverId" });
 
-Solution.belongsTo(Problem, { foreignKey: 'problemId' }); // Solution belongs to Problem
-Problem.hasMany(Solution, { foreignKey: 'problemId' }); // Problem has many Solutions
+Solution.belongsTo(Problem, { foreignKey: "problemId" }); // Solution belongs to Problem
+Problem.hasMany(Solution, { foreignKey: "problemId" }); // Problem has many Solutions
 
 module.exports = Solution;

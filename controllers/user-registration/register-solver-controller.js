@@ -1,5 +1,5 @@
-const Solver = require('../../models/Solver'); // Adjust the path based on your project structure
-const { Op } = require('sequelize'); // Import the Op operator from Sequelize for queries
+const Solver = require("../../models/Solver"); // Adjust the path based on your project structure
+const { Op } = require("sequelize"); // Import the Op operator from Sequelize for queries
 
 const solverController = {
     async register(req, res) {
@@ -36,7 +36,7 @@ const solverController = {
 
             if (existingSolver) {
                 return res.status(400).json({
-                    message: 'Registration failed: email, phone number, or university email already in use.'
+                    message: "Registration failed: email, phone number, or university email already in use."
                 });
             }
 
@@ -53,14 +53,14 @@ const solverController = {
 
             // Respond with the newly created solver data (excluding the password)
             res.status(201).json({
-                message: 'Solver registered successfully',
+                message: "Solver registered successfully",
                 solver: newSolver
             });
 
         } catch (error) {
             // Handle errors (e.g., validation errors, unique constraint errors)
             res.status(400).json({
-                message: 'Error registering solver',
+                message: "Error registering solver",
                 error: error.message
             });
         }
