@@ -6,7 +6,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /:
+ * /problem:
  *   get:
  *     summary: List all problems
  *     description: Retrieve a list of all problems available in the database.
@@ -24,7 +24,7 @@ router.get("/", problemController.readAll);
 
 /**
  * @swagger
- * /{problemId}:
+ * /problem/{problemId}:
  *   get:
  *     summary: Retrieve a specific problem
  *     description: Fetch details of a specific problem by its ID.
@@ -49,7 +49,7 @@ router.get("/:problemId", problemController.read);
 
 /**
  * @swagger
- * /:
+ * /problem:
  *   post:
  *     summary: Create a new problem
  *     description: Add a new problem to the database. Requires uploader role.

@@ -3,7 +3,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 const Solver = require("./Solver");
-const Problem = require("./Problem"); // Import the Problem model
+const { Problem } = require("./Problem"); // Import the Problem model
 
 const Solution = sequelize.define(
     "Solution",
