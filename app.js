@@ -20,7 +20,7 @@ app.use(express.json()); // Parse JSON bodies
 // Use the routers with their respective base paths
 app.use("/api/auth", loginRouter);
 app.use("/api/register", registrationRouter);
-app.use("/api/problem", problemRouter)
+app.use("/api/problem", problemRouter);
 
 // Test database connection and sync models
 async function assertDatabaseConnectionOk() {

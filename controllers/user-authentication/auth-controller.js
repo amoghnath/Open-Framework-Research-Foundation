@@ -78,11 +78,11 @@ const authController = {
             res.clearCookie("user-session-token", {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production"
-            })
+            });
 
-            res.json({ message: "User logout successful" })
+            res.json({ message: "User logout successful" });
         } catch (error) {
-            res.status(500).json({ message: "Error during user logout", error: error.message })
+            res.status(500).json({ message: "Error during user logout", error: error.message });
         }
     }
 };
