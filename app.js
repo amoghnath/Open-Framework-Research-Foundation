@@ -6,7 +6,7 @@ const sequelize = require("./config/db");
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
-const ProblemSwaggerSchema = require("./models/Problem");
+const { ProblemSwaggerSchema } = require("./models/Problem");
 
 const registrationRouter = require("./routes/user-registration-router");
 const loginRouter = require("./routes/user-auth-router");
@@ -26,12 +26,12 @@ const swaggerOptions = {
         },
         components: {
             schemas: {
-                ...ProblemSwaggerSchema.ProblemSwaggerSchema
+                ...ProblemSwaggerSchema
             }
         },
         servers: [
             {
-                url: "http://localhost:3000/api/problem",
+                url: "http://localhost:3000/api",
                 description: "Local server"
             },
         ],

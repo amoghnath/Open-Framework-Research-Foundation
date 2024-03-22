@@ -1,4 +1,4 @@
-const Problem = require("../../models/Problem");
+const { Problem } = require("../../models/Problem");
 const jwt = require("jsonwebtoken");
 
 const problemController = {
