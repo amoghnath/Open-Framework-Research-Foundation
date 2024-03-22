@@ -4,25 +4,71 @@ const problemController = require("../controllers/problems/problem-controller");
 
 const router = express.Router();
 
-// GET /: List all problems
-// This route responds to GET requests on the root path. It uses the `readAll` method
-// from the `problemController` to fetch and return all problems from the database.
-// No authentication is required to access this route, allowing anyone to view the list of problems.
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     summary: List all problems
+ *     description: Retrieve a list of all problems available in the database.
+ *     responses:
+ *       200:
+ *         description: A list of problems.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Problem'
+ */
 router.get("/", problemController.readAll);
 
-// GET /:problemId: Retrieve a specific problem
-// This route responds to GET requests with a specific problem ID in the path (e.g., /12345).
-// It uses the `read` method from the `problemController` to fetch and return the details of
-// the specified problem from the database. Like the route to list all problems, this route does not
-// require authentication, allowing public access to individual problem details.
+/**
+ * @swagger
+ * /{problemId}:
+ *   get:
+ *     summary: Retrieve a specific problem
+ *     description: Fetch details of a specific problem by its ID.
+ *     parameters:
+ *       - in: path
+ *         name: problemId
+ *         required: true
+ *         description: Unique ID of the problem to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Details of a problem.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Problem'
+ *       404:
+ *         description: Problem not found.
+ */
 router.get("/:problemId", problemController.read);
 
-// POST /: Create a new problem
-// This route responds to POST requests on the root path. It is protected by the `authenticateToken`
-// middleware, which ensures that only authenticated users can access this route. Additionally,
-// the `requireRole("uploader")` middleware checks if the authenticated user has the "uploader" role.
-// If the user is authenticated and has the correct role, the `create` method in the `problemController`
-// is called to create a new problem record in the database.
+/**
+ * @swagger
+ * /:
+ *   post:
+ *     summary: Create a new problem
+ *     description: Add a new problem to the database. Requires uploader role.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Problem'
+ *     responses:
+ *       201:
+ *         description: Problem created successfully.
+ *       401:
+ *         description: Unauthorized access.
+ *       403:
+ *         description: Forbidden action, role not allowed.
+ */
 router.post("/", authenticateToken, requireRole("uploader"), problemController.create);
 
 module.exports = router;

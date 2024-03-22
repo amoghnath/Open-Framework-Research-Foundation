@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
-const Uploader = require("./Uploader"); // Assuming Uploader model is in the same directory
+const Uploader = require("./Uploader");
 
 const Problem = sequelize.define(
     "Problem",
@@ -42,8 +42,43 @@ const Problem = sequelize.define(
     }
 );
 
-// Define the association with Uploader (if not already defined in Uploader model)
 Problem.belongsTo(Uploader, { foreignKey: "uploaderId" });
 Uploader.hasMany(Problem, { foreignKey: "uploaderId" });
 
-module.exports = Problem;
+// Swagger schema definition
+const ProblemSwaggerSchema = {
+    Problem: {
+        type: "object",
+        properties: {
+            problemId: {
+                type: "string",
+                format: "uuid",
+                description: "Unique identifier for the problem"
+            },
+            uploaderId: {
+                type: "string",
+                format: "uuid",
+                description: "Identifier for the uploader of the problem"
+            },
+            problemTitle: {
+                type: "string",
+                description: "Title of the problem"
+            },
+            problemDescription: {
+                type: "string",
+                description: "Description of the problem"
+            },
+            problemReward: {
+                type: "integer",
+                description: "Reward for solving the problem"
+            },
+            problemDeadlineDate: {
+                type: "string",
+                format: "date-time",
+                description: "Deadline for solving the problem"
+            }
+        }
+    }
+};
+
+module.exports = { Problem, ProblemSwaggerSchema };
