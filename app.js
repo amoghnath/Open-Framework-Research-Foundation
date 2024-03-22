@@ -18,6 +18,9 @@ const problemRouter = require("./routes/problem-router");
 // Initialize Express app
 const app = express();
 
+// Define the port to run the server on
+const PORT = process.env.PORT || 3000;
+
 // Swagger setup
 const swaggerOptions = {
     definition: {
@@ -37,7 +40,7 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: "http://localhost:3000/api",
+                url: `http://localhost:${PORT}/api`,
                 description: "Local server development for Open Framework Research Foundation"
             },
         ],
@@ -68,12 +71,9 @@ async function assertDatabaseConnectionOk() {
         console.log("Database synced!");
     } catch (error) {
         console.error("Unable to connect to the database:", error);
-        process.exit(1);
+        throw new Error("Database connection failed: " + error.message);
     }
 }
-
-// Define the port to run the server on
-const PORT = process.env.PORT || 3000;
 
 // Define a route for GET requests to the root URL ('/')
 app.get("/", (req, res) => {
