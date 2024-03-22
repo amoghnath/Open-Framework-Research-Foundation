@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.get("/", problemController.readAll)
 router.post("/", authenticateToken, requireRole('uploader'), problemController.create);
-router.get("/:problemId", authenticateToken, problemController.read);
+router.get("/:problemId", problemController.read);
 
-module.exports = router;
+module.exports = router; 
