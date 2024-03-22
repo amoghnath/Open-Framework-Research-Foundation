@@ -31,7 +31,7 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: "http://localhost:3000/api",
+                url: "http://localhost:3000/api/problem",
                 description: "Local server"
             },
         ],

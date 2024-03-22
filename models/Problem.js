@@ -81,4 +81,5 @@ const ProblemSwaggerSchema = {
     }
 };
 
-module.exports = { Problem, ProblemSwaggerSchema };
+module.exports = { ProblemSwaggerSchema };
+module.exports = Problem;
