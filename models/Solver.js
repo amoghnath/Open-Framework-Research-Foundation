@@ -70,4 +70,44 @@ const Solver = sequelize.define(
     }
 );
 
-module.exports = Solver;
+const SolverSwaggerSchema = {
+    Solver: {
+        type: "object",
+        properties: {
+            solverId: {
+                type: "string",
+                format: "uuid",
+                description: "Unique identifier for the solver"
+            },
+            solverEmail: {
+                type: "string",
+                format: "email",
+                description: "Email address of the solver"
+            },
+            // Don't include solverPassword in the Swagger schema to avoid exposing it in the documentation
+            solverFullName: {
+                type: "string",
+                description: "Full name of the solver"
+            },
+            solverPhoneNumber: {
+                type: "string",
+                description: "Phone number of the solver"
+            },
+            solverUniversityName: {
+                type: "string",
+                description: "University name associated with the solver"
+            },
+            solverUniversityEmail: {
+                type: "string",
+                format: "email",
+                description: "University email of the solver"
+            },
+            solverUniversityAddress: {
+                type: "string",
+                description: "University address of the solver"
+            }
+        }
+    }
+};
+
+module.exports = { Solver, SolverSwaggerSchema };

@@ -71,4 +71,44 @@ const Uploader = sequelize.define(
     }
 );
 
-module.exports = Uploader;
+const UploaderSwaggerSchema = {
+    Uploader: {
+        type: "object",
+        properties: {
+            uploaderId: {
+                type: "string",
+                format: "uuid",
+                description: "Unique identifier for the uploader"
+            },
+            uploaderEmail: {
+                type: "string",
+                format: "email",
+                description: "Email address of the uploader"
+            },
+            // Don't include uploaderPassword in the Swagger schema to avoid exposing it in the documentation
+            uploaderFullName: {
+                type: "string",
+                description: "Full name of the uploader"
+            },
+            uploaderPhoneNumber: {
+                type: "string",
+                description: "Phone number of the uploader"
+            },
+            uploaderBusinessName: {
+                type: "string",
+                description: "Business name associated with the uploader"
+            },
+            uploaderBusinessEmail: {
+                type: "string",
+                format: "email",
+                description: "Business email of the uploader"
+            },
+            uploaderBusinessAddress: {
+                type: "string",
+                description: "Business address of the uploader"
+            }
+        }
+    }
+};
+
+module.exports = { Uploader, UploaderSwaggerSchema };

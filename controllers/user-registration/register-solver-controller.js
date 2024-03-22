@@ -1,4 +1,4 @@
-const Solver = require("../../models/Solver"); // Adjust the path based on your project structure
+const { Solver } = require("../../models/Solver"); // Adjust the path based on your project structure
 const { Op } = require("sequelize"); // Import the Op operator from Sequelize for queries
 
 const solverController = {

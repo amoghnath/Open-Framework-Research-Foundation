@@ -7,6 +7,8 @@ const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
 const { ProblemSwaggerSchema } = require("./models/Problem");
+const { UploaderSwaggerSchema } = require("./models/Uploader");
+const { SolverSwaggerSchema } = require("./models/Solver");
 
 const registrationRouter = require("./routes/user-registration-router");
 const loginRouter = require("./routes/user-auth-router");
@@ -26,13 +28,15 @@ const swaggerOptions = {
         },
         components: {
             schemas: {
-                ...ProblemSwaggerSchema
+                ...UploaderSwaggerSchema,
+                ...SolverSwaggerSchema,
+                ...ProblemSwaggerSchema,
             }
         },
         servers: [
             {
                 url: "http://localhost:3000/api",
-                description: "Local server"
+                description: "Local server development for Open Framework Research Foundation"
             },
         ],
     },

@@ -4,10 +4,52 @@ const solverController = require("../controllers/user-registration/register-solv
 
 const router = express.Router();
 
-// Endpoint for registering an uploader
+/**
+ * @swagger
+ * /register/uploader:
+ *   post:
+ *     summary: Register a new uploader
+ *     description: Endpoint for registering a new uploader.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Uploader'
+ *     responses:
+ *       201:
+ *         description: Uploader registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Uploader'
+ *       400:
+ *         description: Invalid request data
+ */
 router.post("/uploader", uploaderController.register);
 
-// Endpoint for registering a solver
+/**
+ * @swagger
+ * /register/solver:
+ *   post:
+ *     summary: Register a new solver
+ *     description: Endpoint for registering a new solver.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Solver'
+ *     responses:
+ *       201:
+ *         description: Solver registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Solver'
+ *       400:
+ *         description: Invalid request data
+ */
 router.post("/solver", solverController.register);
 
 module.exports = router;

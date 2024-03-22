@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
-const Uploader = require("./Uploader");
+const { Uploader } = require("./Uploader");
 
 const Problem = sequelize.define(
     "Problem",

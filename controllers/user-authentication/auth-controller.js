@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const Uploader = require("../../models/Uploader");
+const { Uploader } = require("../../models/Uploader");
 const Solver = require("../../models/Solver"); // Assuming you have a similar structure for Solver model
 const bcrypt = require("bcryptjs");
 

@@ -1,4 +1,4 @@
-const Uploader = require("../../models/Uploader"); // Adjust the path based on your project structure
+const { Uploader } = require("../../models/Uploader"); // Adjust the path based on your project structure
 const { Op } = require("sequelize"); // Make sure to import Op from sequelize
 
 const uploaderController = {
