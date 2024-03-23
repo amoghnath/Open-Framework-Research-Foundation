@@ -2,6 +2,7 @@ require("dotenv").config();
 const cookieParser = require("cookie-parser");
 const express = require("express");
 const helmet = require("helmet");
+const compression = require("compression");
 const sequelize = require("./config/db");
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
@@ -54,6 +55,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // Use middleware
 app.use(cookieParser());
 app.use(helmet());
+app.use(compression());
 app.use(express.json()); // Parse JSON bodies
 
 // Use the routers with their respective base paths
