@@ -1,28 +1,35 @@
+// Environment and Module Imports
 require("dotenv").config();
-const cookieParser = require("cookie-parser");
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
 const compression = require("compression");
 const sequelize = require("./config/db");
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
+// Model Imports
 const { UploaderSwaggerSchema } = require("./models/Uploader");
 const { SolverSwaggerSchema } = require("./models/Solver");
 const { ProblemSwaggerSchema } = require("./models/Problem");
 const { SolutionSwaggerSchema } = require("./models/Solution");
 
+// Router Imports
 const registrationRouter = require("./routes/user-registration-router");
 const loginRouter = require("./routes/user-auth-router");
 const problemRouter = require("./routes/problem-router");
 
-// Initialize Express app
+// Express App Initialization
 const app = express();
-
-// Define the port to run the server on
 const PORT = process.env.PORT || 3000;
 
-// Swagger setup
+// Middleware Configuration
+app.use(cookieParser());
+app.use(helmet());
+app.use(compression());
+app.use(express.json()); // Parse JSON bodies
+
+// Swagger Documentation Setup
 const swaggerOptions = {
     definition: {
         openapi: "3.0.0",
@@ -39,31 +46,14 @@ const swaggerOptions = {
                 ...SolutionSwaggerSchema,
             }
         },
-        servers: [
-            {
-                url: `http://localhost:${PORT}/api`,
-                description: "Local server development for Open Framework Research Foundation"
-            },
-        ],
+        servers: [{ url: `http://localhost:${PORT}/api`, description: "Local server development" }],
     },
     apis: ["./routes/*.js"],
 };
-
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use("/docs/api", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-// Use middleware
-app.use(cookieParser());
-app.use(helmet());
-app.use(compression());
-app.use(express.json()); // Parse JSON bodies
-
-// Use the routers with their respective base paths
-app.use("/api/auth", loginRouter);
-app.use("/api/register", registrationRouter);
-app.use("/api/problem", problemRouter);
-
-// Test database connection and sync models
+// Database Connection Function
 async function assertDatabaseConnectionOk() {
     console.log("Checking database connection...");
     try {
@@ -77,12 +67,13 @@ async function assertDatabaseConnectionOk() {
     }
 }
 
-// Define a route for GET requests to the root URL ('/')
-app.get("/", (req, res) => {
-    res.send("Express server running on port 3000");
-});
+// API Routes
+app.use("/api/auth", loginRouter);
+app.use("/api/register", registrationRouter);
+app.use("/api/problem", problemRouter);
+app.get("/", (req, res) => res.send("Express server running on port 3000"));
 
-// Start the server after ensuring the database is connected and synced
+// Start Server
 assertDatabaseConnectionOk().then(() => {
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
