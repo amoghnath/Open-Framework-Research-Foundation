@@ -10,6 +10,8 @@ const router = express.Router();
  *   post:
  *     summary: Create a new solution
  *     description: Submit a new solution for a problem. Requires authentication and solver role.
+ *     tags:
+ *      - solution
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -38,6 +40,8 @@ router.post("/", authenticateToken, requireRole("solver"), solutionController.cr
  *   get:
  *     summary: Retrieve all solutions submitted by the authenticated solver
  *     description: Fetch all solutions submitted by the currently authenticated solver. Requires authentication.
+ *     tags:
+ *      - solution
  *     security:
  *       - bearerAuth: []
  *     responses:

@@ -10,6 +10,8 @@ const router = express.Router();
  *   post:
  *     summary: Register a new uploader
  *     description: Endpoint for registering a new uploader.
+ *     tags:
+ *       - registration
  *     requestBody:
  *       required: true
  *       content:
@@ -34,6 +36,8 @@ router.post("/uploader", uploaderController.register);
  *   post:
  *     summary: Register a new solver
  *     description: Endpoint for registering a new solver.
+ *     tags:
+ *      - registration
  *     requestBody:
  *       required: true
  *       content:

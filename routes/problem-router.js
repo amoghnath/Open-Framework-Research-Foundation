@@ -10,6 +10,8 @@ const router = express.Router();
  *   get:
  *     summary: List all problems
  *     description: Retrieve a list of all problems available in the database.
+ *     tags:
+ *      - problem
  *     responses:
  *       200:
  *         description: A list of problems.
@@ -28,6 +30,8 @@ router.get("/", problemController.readAll);
  *   get:
  *     summary: Retrieve a specific problem
  *     description: Fetch details of a specific problem by its ID.
+ *     tags:
+ *       - problem
  *     parameters:
  *       - in: path
  *         name: problemId
@@ -53,6 +57,8 @@ router.get("/:problemId", problemController.read);
  *   post:
  *     summary: Create a new problem
  *     description: Add a new problem to the database. Requires uploader role.
+ *     tags:
+ *       - problem
  *     security:
  *       - bearerAuth: []
  *     requestBody:

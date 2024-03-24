@@ -9,6 +9,8 @@ const router = express.Router();
  *   post:
  *     summary: User authentication
  *     description: Login endpoint for uploader or solver. Returns a JWT token if authentication is successful.
+ *     tags:
+ *      - authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -59,6 +61,8 @@ router.post("/login", authController.login);
  *   post:
  *     summary: User logout
  *     description: Logout endpoint for the user. Clears the user's session token.
+ *     tags:
+ *      - authentication
  *     responses:
  *       200:
  *         description: Logout successful
