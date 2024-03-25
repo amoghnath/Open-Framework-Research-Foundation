@@ -1,5 +1,5 @@
-const { Solver } = require("../../models/Solver"); // Adjust the path based on your project structure
-const { Op } = require("sequelize"); // Import the Op operator from Sequelize for queries
+const { Solver } = require("../../models/Solver");
+const { Op } = require("sequelize");
 
 const solverController = {
     async register(req, res) {
@@ -23,6 +23,25 @@ const solverController = {
             solverUniversityEmail = solverUniversityEmail.trim();
             solverUniversityAddress = solverUniversityAddress.trim();
 
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(solverEmail) || !emailRegex.test(solverUniversityEmail)) {
+                return res.status(400).json({ message: "Invalid email format" });
+            }
+
+            // Validate phone number length (10 digits)
+            if (solverPhoneNumber.length !== 10 || !/^\d+$/.test(solverPhoneNumber)) {
+                return res.status(400).json({ message: "Phone number must be 10 digits long" });
+            }
+
+            // Validate password (at least 8 characters, one lowercase, one uppercase, one number)
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+            if (!passwordRegex.test(solverPassword)) {
+                return res.status(400).json({
+                    message: "Password must be at least 8 characters long, including one lowercase letter, one uppercase letter, and one number"
+                });
+            }
+
             // Check for existing records with the same email, phone number, or university email
             const existingSolver = await Solver.findOne({
                 where: {
@@ -43,7 +62,7 @@ const solverController = {
             // Create a new solver record in the database
             const newSolver = await Solver.create({
                 solverEmail,
-                solverPassword, // The password should be hashed in the beforeCreate hook of the Solver model
+                solverPassword, // Ensure the password is hashed in the beforeCreate hook of the Solver model
                 solverFullName,
                 solverPhoneNumber,
                 solverUniversityName,
