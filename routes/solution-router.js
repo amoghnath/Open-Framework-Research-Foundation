@@ -7,6 +7,30 @@ const router = express.Router();
 /**
  * @swagger
  * /solution:
+ *   get:
+ *     summary: Retrieve all solutions submitted by the authenticated solver
+ *     description: Fetch all solutions submitted by the currently authenticated solver. Requires authentication.
+ *     tags:
+ *      - solution
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of solutions submitted by the solver
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Solution'
+ *       401:
+ *         description: Unauthorized access
+ */
+router.get("/", authenticateToken, solutionController.readAllBySolver);
+
+/**
+ * @swagger
+ * /solution:
  *   post:
  *     summary: Create a new solution
  *     description: Submit a new solution for a problem. Requires authentication and solver role.
@@ -33,29 +57,5 @@ const router = express.Router();
  *         description: Access forbidden - user is not in the solver role
  */
 router.post("/", authenticateToken, requireRole("solver"), solutionController.create);
-
-/**
- * @swagger
- * /solution:
- *   get:
- *     summary: Retrieve all solutions submitted by the authenticated solver
- *     description: Fetch all solutions submitted by the currently authenticated solver. Requires authentication.
- *     tags:
- *      - solution
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: List of solutions submitted by the solver
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Solution'
- *       401:
- *         description: Unauthorized access
- */
-router.get("/", authenticateToken, solutionController.readAllBySolver);
 
 module.exports = router;
