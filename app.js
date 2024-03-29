@@ -8,6 +8,7 @@ const sequelize = require("./config/db");
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 
 // Model Imports
 const { UploaderSwaggerSchema } = require("./models/Uploader");
@@ -28,6 +29,7 @@ const PORT = process.env.PORT || 3000;
 const corsOptions = {
     origin: "http://localhost:3001", // Allow only http://localhost:3001
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+    credentials: true, // This allows the server to send cookies in the response
 };
 
 // Middleware Configuration
@@ -36,6 +38,22 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(compression());
 app.use(express.json()); // Parse JSON bodies
+
+app.get('/api/auth/verifyToken', (req, res) => {
+    const token = req.cookies['user-session-token'];
+    if (!token) {
+        return res.status(401).json({ message: 'No token provided' });
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({ message: 'Token verification failed' });
+        }
+
+        // Optionally retrieve user details from the database and send it back
+        res.json({ message: 'Token verified', user: decoded });
+    });
+});
 
 // Swagger Documentation Setup
 const swaggerOptions = {
