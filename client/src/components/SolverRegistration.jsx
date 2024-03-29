@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
     Avatar, Button, CssBaseline, TextField, Paper, Box, Grid, Typography, createTheme, ThemeProvider, Alert, Alert as MUIAlert, List, ListItem, ListItemText, InputAdornment, Snackbar
 } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import SendIcon from '@mui/icons-material/Send';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -62,7 +62,7 @@ export default function SolverRegistrationForm() {
                 <Grid item xs={false} sm={4} md={7} component={Paper} elevation={6} square>
                     <Box
                         sx={{
-                            my: 8,
+                            my: 4,
                             mx: 4,
                             display: 'flex',
                             flexDirection: 'column',
@@ -131,9 +131,9 @@ export default function SolverRegistrationForm() {
                     </Box>
                 </Grid>
 
-                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+                <Grid item xs={12} sm={8} md={5} component={Paper} square>
                     <Box sx={{
-                        my: 8,
+                        my: 4,
                         mx: 4,
                         display: 'flex',
                         flexDirection: 'column',
@@ -149,7 +149,7 @@ export default function SolverRegistrationForm() {
                         />
 
                         <Typography component="h1" variant="h5">
-                            Solver Registration
+                            Problem Solver Registration
                         </Typography>
                         <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
                             <Controller
@@ -279,9 +279,18 @@ export default function SolverRegistrationForm() {
                                 type="submit"
                                 fullWidth
                                 variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
+                                startIcon={<SendIcon />} // Use Send icon
+                                sx={{
+                                    mt: 3,
+                                    padding: '15px',
+                                    backgroundColor: 'black', // Set background color to black
+                                    color: 'white', // Set text color to white
+                                    '&:hover': {
+                                        backgroundColor: 'rgba(0, 0, 0, 0.8)', // Subtle black on hover
+                                    }
+                                }}
                             >
-                                Register
+                                Submit
                             </Button>
                         </Box>
                     </Box>

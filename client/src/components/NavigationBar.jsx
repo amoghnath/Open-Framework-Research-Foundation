@@ -91,6 +91,7 @@ export default function ButtonAppBar() {
                             }
                         }}
                         startIcon={<LoginIcon style={{ color: 'white' }} />}
+                        onClick={() => handleNavigation('/login')}
                     >
                         Login
                     </Button>
