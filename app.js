@@ -7,6 +7,7 @@ const compression = require("compression");
 const sequelize = require("./config/db");
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+const cors = require("cors");
 
 // Model Imports
 const { UploaderSwaggerSchema } = require("./models/Uploader");
@@ -23,7 +24,14 @@ const problemRouter = require("./routes/problem-router");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// CORS Configuration
+const corsOptions = {
+    origin: "http://localhost:3001", // Allow only http://localhost:3001
+    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
 // Middleware Configuration
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(helmet());
 app.use(compression());

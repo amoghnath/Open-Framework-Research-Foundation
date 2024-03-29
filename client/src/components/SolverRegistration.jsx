@@ -11,16 +11,16 @@ import Icon from '@mui/material/Icon';
 const theme = createTheme();
 
 const validationSchema = yup.object({
-    uploaderEmail: yup.string().email('Must be a valid email').required('Email is required'),
-    uploaderPassword: yup.string().min(8, 'Password must be at least 8 characters long').required('Password is required'),
-    uploaderFullName: yup.string().required('Full name is required'),
-    uploaderPhoneNumber: yup.string().matches(/^[0-9]{10}$/, 'Phone number must be 10 digits long').required('Phone number is required'),
-    uploaderBusinessName: yup.string().required('Business name is required'),
-    uploaderBusinessEmail: yup.string().email('Must be a valid email').required('Business email is required'),
-    uploaderBusinessAddress: yup.string().required('Business address is required')
+    solverEmail: yup.string().email('Must be a valid email').required('Email is required'),
+    solverPassword: yup.string().min(8, 'Password must be at least 8 characters long').required('Password is required'),
+    solverFullName: yup.string().required('Full name is required'),
+    solverPhoneNumber: yup.string().matches(/^[0-9]{10}$/, 'Phone number must be 10 digits long').required('Phone number is required'),
+    solverUniversityName: yup.string().required('University name is required'),
+    solverUniversityEmail: yup.string().email('Must be a valid email').required('University email is required'),
+    solverUniversityAddress: yup.string().required('University address is required')
 });
 
-export default function UploaderRegistrationForm() {
+export default function SolverRegistrationForm() {
     const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(validationSchema)
     });
@@ -29,7 +29,7 @@ export default function UploaderRegistrationForm() {
 
     const onSubmit = async (data) => {
         try {
-            const response = await fetch('http://localhost:3000/api/register/uploader', {
+            const response = await fetch('http://localhost:3000/api/register/solver', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -98,10 +98,10 @@ export default function UploaderRegistrationForm() {
                                     <ListItemText primary="Provide accurate and complete registration information." />
                                 </ListItem>
                                 <ListItem disablePadding>
-                                    <ListItemText primary="You should have valid business credentials for registration." />
+                                    <ListItemText primary="You must possess valid university credentials to register." />
                                 </ListItem>
                                 <ListItem disablePadding>
-                                    <ListItemText primary="Ensure that the business email and business address provided are valid and currently in use." />
+                                    <ListItemText primary="Ensure that your university email and address provided are valid and currently in use." />
                                 </ListItem>
                                 <ListItem disablePadding>
                                     <ListItemText primary="Passwords must be at least 8 characters long and should include a mix of letters, numbers, and symbols." />
@@ -116,11 +116,15 @@ export default function UploaderRegistrationForm() {
                                     <ListItemText primary="You are responsible for all activity on your account." />
                                 </ListItem>
                                 <ListItem disablePadding>
-                                    <ListItemText primary="Do not engage in any activities that would disrupt, damage, or harm the service or experience of other users." />
+                                    <ListItemText primary="Engage respectfully and constructively, avoiding activities that would disrupt or harm the service or others' experience." />
                                 </ListItem>
                                 <ListItem disablePadding>
-                                    <ListItemText primary="All registered content will be moderated and must comply with our content guidelines." />
+                                    <ListItemText primary="All submitted problems and solutions will be moderated according to academic standards and university policies." />
                                 </ListItem>
+                                <ListItem disablePadding>
+                                    <ListItemText primary="Adhere to academic integrity and avoid plagiarism in problem submissions and solutions." />
+                                </ListItem>
+
 
                             </List>
                         </Alert>
@@ -135,15 +139,21 @@ export default function UploaderRegistrationForm() {
                         flexDirection: 'column',
                         alignItems: 'center',
                     }}>
-                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                            <LockOutlinedIcon />
-                        </Avatar>
+                        <Avatar
+                            src={`${process.env.PUBLIC_URL}/assets/logo.webp`} // Access image from public/assets
+                            alt="ORFC"
+                            sx={{
+                                width: 100, // Increase width as needed
+                                height: 100, // Increase height as needed
+                            }}
+                        />
+
                         <Typography component="h1" variant="h5">
-                            Uploader Registration
+                            Solver Registration
                         </Typography>
                         <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
                             <Controller
-                                name="uploaderEmail"
+                                name="solverEmail"
                                 control={control}
                                 defaultValue=""
                                 render={({ field }) => (
@@ -152,14 +162,14 @@ export default function UploaderRegistrationForm() {
                                         fullWidth
                                         label="Email Address"
                                         margin="normal"
-                                        error={!!errors.uploaderEmail}
-                                        helperText={errors.uploaderEmail?.message}
+                                        error={!!errors.solverEmail}
+                                        helperText={errors.solverEmail?.message}
                                     />
                                 )}
                             />
 
                             <Controller
-                                name="uploaderPassword"
+                                name="solverPassword"
                                 control={control}
                                 defaultValue=""
                                 render={({ field }) => (
@@ -169,14 +179,14 @@ export default function UploaderRegistrationForm() {
                                         label="Password"
                                         type="password"
                                         margin="normal"
-                                        error={!!errors.uploaderPassword}
-                                        helperText={errors.uploaderPassword?.message}
+                                        error={!!errors.solverPassword}
+                                        helperText={errors.solverPassword?.message}
                                     />
                                 )}
                             />
 
                             <Controller
-                                name="uploaderFullName"
+                                name="solverFullName"
                                 control={control}
                                 defaultValue=""
                                 render={({ field }) => (
@@ -185,14 +195,14 @@ export default function UploaderRegistrationForm() {
                                         fullWidth
                                         label="Full Name"
                                         margin="normal"
-                                        error={!!errors.uploaderFullName}
-                                        helperText={errors.uploaderFullName?.message}
+                                        error={!!errors.solverFullName}
+                                        helperText={errors.solverFullName?.message}
                                     />
                                 )}
                             />
 
                             <Controller
-                                name="uploaderPhoneNumber"
+                                name="solverPhoneNumber"
                                 control={control}
                                 defaultValue=""
                                 render={({ field }) => (
@@ -201,8 +211,8 @@ export default function UploaderRegistrationForm() {
                                         fullWidth
                                         label="Phone Number"
                                         margin="normal"
-                                        error={!!errors.uploaderPhoneNumber}
-                                        helperText={errors.uploaderPhoneNumber?.message}
+                                        error={!!errors.solverPhoneNumber}
+                                        helperText={errors.solverPhoneNumber?.message}
                                         InputProps={{
                                             startAdornment: (
                                                 <InputAdornment position="start">
@@ -218,49 +228,49 @@ export default function UploaderRegistrationForm() {
                             />
 
                             <Controller
-                                name="uploaderBusinessName"
+                                name="solverUniversityName"
                                 control={control}
                                 defaultValue=""
                                 render={({ field }) => (
                                     <TextField
                                         {...field}
                                         fullWidth
-                                        label="Business Name"
+                                        label="University Name"
                                         margin="normal"
-                                        error={!!errors.uploaderBusinessName}
-                                        helperText={errors.uploaderBusinessName?.message}
+                                        error={!!errors.solverUniversityName}
+                                        helperText={errors.solverUniversityName?.message}
                                     />
                                 )}
                             />
 
                             <Controller
-                                name="uploaderBusinessEmail"
+                                name="solverUniversityEmail"
                                 control={control}
                                 defaultValue=""
                                 render={({ field }) => (
                                     <TextField
                                         {...field}
                                         fullWidth
-                                        label="Business Email"
+                                        label="University Email"
                                         margin="normal"
-                                        error={!!errors.uploaderBusinessEmail}
-                                        helperText={errors.uploaderBusinessEmail?.message}
+                                        error={!!errors.solverUniversityEmail}
+                                        helperText={errors.solverUniversityEmail?.message}
                                     />
                                 )}
                             />
 
                             <Controller
-                                name="uploaderBusinessAddress"
+                                name="solverUniversityAddress"
                                 control={control}
                                 defaultValue=""
                                 render={({ field }) => (
                                     <TextField
                                         {...field}
                                         fullWidth
-                                        label="Business Address"
+                                        label="University Address"
                                         margin="normal"
-                                        error={!!errors.uploaderBusinessAddress}
-                                        helperText={errors.uploaderBusinessAddress?.message}
+                                        error={!!errors.solverUniversityAddress}
+                                        helperText={errors.solverUniversityAddress?.message}
                                     />
                                 )}
                             />
