@@ -35,7 +35,7 @@ function App() {
                   <Route path="/register/uploader" element={<LoggedInAuthRoute><UploaderRegistrationForm /></LoggedInAuthRoute>} />
                   <Route path="/register/solver" element={<LoggedInAuthRoute><SolverRegistrationForm /></LoggedInAuthRoute>} />
                   <Route path="/create-problem" element={<PrivateRoute><CreateProblemForm /></PrivateRoute>} />
-                  {/* Add other routes here */}
+
                 </Routes>
               </Suspense>
             </main>

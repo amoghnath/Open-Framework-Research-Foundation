@@ -28,17 +28,33 @@ function CreateProblemForm() {
     const [problemDescription, setProblemDescription] = useState('');
     const [problemReward, setProblemReward] = useState('');
     const [problemDeadlineDate, setProblemDeadlineDate] = useState(null);
+    const [errors, setErrors] = useState({});
+
+    const validateForm = () => {
+        let tempErrors = {};
+        tempErrors.problemTitle = problemTitle ? '' : 'Problem title is required';
+        tempErrors.problemDescription = problemDescription ? '' : 'Problem description is required';
+        tempErrors.problemReward = problemReward && !isNaN(problemReward) ? '' : 'Reward must be a number';
+        tempErrors.problemDeadlineDate = problemDeadlineDate ? '' : 'Deadline date is required';
+
+        setErrors(tempErrors);
+        return Object.values(tempErrors).every(x => x === "");
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        // Here you would handle form submission, e.g., calling an API
-        alert('Form submitted, check the console for details.');
-        console.log({
-            problemTitle,
-            problemDescription,
-            problemReward,
-            problemDeadlineDate: problemDeadlineDate?.format(), // Convert Dayjs object to string
-        });
+        if (validateForm()) {
+            alert('Form submitted, check the console for details.');
+            console.log({
+                problemTitle,
+                problemDescription,
+                problemReward,
+                problemDeadlineDate: problemDeadlineDate?.format(), // Convert Dayjs object to string
+            });
+            // Here you would handle form submission, e.g., calling an API
+        } else {
+            console.log('Validation errors', errors);
+        }
     };
 
     return (
@@ -73,35 +89,36 @@ function CreateProblemForm() {
                                     }}
                                 >
                                     <ListItem disablePadding>
-                                        <ListItemText primary='You must be at least 18 years old to register.' />
+                                        <ListItemText primary='Industry representatives must have valid business credentials to upload problems.' />
                                     </ListItem>
                                     <ListItem disablePadding>
-                                        <ListItemText primary='Provide accurate and complete registration information.' />
+                                        <ListItemText primary='The problem statement must be clear, concise, and not exceed 200 words.' />
                                     </ListItem>
                                     <ListItem disablePadding>
-                                        <ListItemText primary='You should have valid business credentials for registration.' />
+                                        <ListItemText primary='Provide a detailed introduction that sets the context for the problem, including industry relevance.' />
                                     </ListItem>
                                     <ListItem disablePadding>
-                                        <ListItemText primary='Ensure that the business email and business address provided are valid and currently in use.' />
+                                        <ListItemText primary='Clearly outline the objectives, goals, and success criteria for the solution.' />
                                     </ListItem>
                                     <ListItem disablePadding>
-                                        <ListItemText primary='Passwords must be at least 8 characters long and should include a mix of letters, numbers, and symbols.' />
+                                        <ListItemText primary='Include necessary technical details, data, and resources to aid in solving the problem.' />
                                     </ListItem>
                                     <ListItem disablePadding>
-                                        <ListItemText primary='Maintain the security of your password and identification.' />
+                                        <ListItemText primary='Specify any constraints like budget, time, technology, or resources that solvers must adhere to.' />
                                     </ListItem>
                                     <ListItem disablePadding>
-                                        <ListItemText primary='Accept all risks of unauthorized access to information and Registration Data.' />
+                                        <ListItemText primary='State the expected solution format, such as report, prototype, code, etc.' />
                                     </ListItem>
                                     <ListItem disablePadding>
-                                        <ListItemText primary='You are responsible for all activity on your account.' />
+                                        <ListItemText primary='Ensure that the content adheres to the platform’s guidelines and is appropriate for a professional audience.' />
                                     </ListItem>
                                     <ListItem disablePadding>
-                                        <ListItemText primary='Do not engage in any activities that would disrupt, damage, or harm the service or experience of other users.' />
+                                        <ListItemText primary='Maintain the confidentiality of sensitive information and do not disclose proprietary data.' />
                                     </ListItem>
                                     <ListItem disablePadding>
-                                        <ListItemText primary='All registered content will be moderated and must comply with our content guidelines.' />
+                                        <ListItemText primary='Accept responsibility for the accuracy and completeness of the submitted problem and its details.' />
                                     </ListItem>
+
                                 </List>
                             </Alert>
                         </Grid>
@@ -116,6 +133,8 @@ function CreateProblemForm() {
                                     name='problemTitle'
                                     value={problemTitle}
                                     onChange={(e) => setProblemTitle(e.target.value)}
+                                    error={!!errors.problemTitle}
+                                    helperText={errors.problemTitle}
                                 />
                                 <FormControl fullWidth sx={{ mt: 2, mb: 2 }}>
                                     <InputLabel htmlFor='problemReward'>Reward</InputLabel>
@@ -124,14 +143,26 @@ function CreateProblemForm() {
                                         startAdornment={<InputAdornment position='start'>$</InputAdornment>}
                                         value={problemReward}
                                         onChange={(e) => setProblemReward(e.target.value)}
+                                        error={!!errors.problemReward}
                                     />
+                                    <Typography variant="caption" color="error">
+                                        {errors.problemReward}
+                                    </Typography>
                                 </FormControl>
-                                <LocalizationProvider dateAdapter={AdapterDayjs} >
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
                                         label='Deadline Date'
                                         value={problemDeadlineDate}
                                         onChange={setProblemDeadlineDate}
-                                        renderInput={(params) => <TextField {...params} fullWidth sx={{ mt: 2 }} />}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                fullWidth
+                                                sx={{ mt: 2 }}
+                                                error={!!errors.problemDeadlineDate}
+                                                helperText={errors.problemDeadlineDate}
+                                            />
+                                        )}
                                     />
                                 </LocalizationProvider>
                                 <Divider sx={{ mt: 2, mb: 2 }} />
@@ -143,6 +174,9 @@ function CreateProblemForm() {
                                     data={problemDescription}
                                     onChange={(event, editor) => setProblemDescription(editor.getData())}
                                 />
+                                <Typography variant="caption" color="error">
+                                    {errors.problemDescription}
+                                </Typography>
                                 <Button type='submit' fullWidth variant='contained' sx={{ mt: 3 }}>
                                     Create Problem
                                 </Button>
