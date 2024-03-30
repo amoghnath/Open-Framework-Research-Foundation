@@ -1,24 +1,22 @@
 import React, { useState } from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import {
+    AppBar, Box, Toolbar, Typography, Button, Menu, MenuItem, ListItemIcon,
+    ListItemText, Avatar,
+} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import LoginIcon from '@mui/icons-material/Login';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import SchoolIcon from '@mui/icons-material/School';
-import { useNavigate } from 'react-router-dom';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { useAuth } from '../context/AuthContext'; // Import useAuth
 
 export default function NavigationBar() {
     const [anchorEl, setAnchorEl] = useState(null);
+    const [profileMenuAnchorEl, setProfileMenuAnchorEl] = useState(null);
     const navigate = useNavigate();
-    const { isAuthenticated, currentUser, logout } = useAuth(); // Use useAuth to access isAuthenticated, currentUser and logout function
+    const { isAuthenticated, currentUser, logout } = useAuth();
 
     const handleRegisterClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -28,14 +26,24 @@ export default function NavigationBar() {
         setAnchorEl(null);
     };
 
+    const handleProfileMenuClick = (event) => {
+        setProfileMenuAnchorEl(event.currentTarget);
+    };
+
+    const handleProfileMenuClose = () => {
+        setProfileMenuAnchorEl(null);
+    };
+
     const handleNavigation = (path) => {
         navigate(path);
         handleClose();
+        handleProfileMenuClose();
     };
 
     const handleLogout = () => {
         logout();
         navigate('/');
+        handleProfileMenuClose();
     };
 
     return (
@@ -86,6 +94,7 @@ export default function NavigationBar() {
                             <Button
                                 variant="contained"
                                 sx={{
+                                    margin: 1,
                                     color: 'white',
                                     backgroundColor: 'black',
                                     '&:hover': {
@@ -104,18 +113,39 @@ export default function NavigationBar() {
                         <>
                             {currentUser?.role === 'uploader' && (
                                 <Button
-                                    color="inherit"
+                                    variant="contained"
+                                    sx={{
+                                        margin: 1,
+                                        color: 'white',
+                                        backgroundColor: 'black',
+                                        '&:hover': {
+                                            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                        }
+                                    }}
+                                    startIcon={<AddCircleOutlineIcon style={{ color: 'white' }} />}
                                     onClick={() => handleNavigation('/create-problem')}
                                 >
-                                    Create a Problem
+                                    Create Problem
                                 </Button>
                             )}
-                            <Button color="inherit" onClick={() => handleNavigation('/my-profile')}>
-                                My Profile
-                            </Button>
-                            <Button color="inherit" onClick={handleLogout}>
-                                Logout
-                            </Button>
+                            <Avatar
+                                onClick={handleProfileMenuClick}
+                                sx={{ cursor: 'pointer', marginLeft: '10px' }}
+                                alt="Profile"
+                                src="/path/to/your/avatar/image.jpg" // Update path to your profile image
+                            />
+                            <Menu
+                                anchorEl={profileMenuAnchorEl}
+                                open={Boolean(profileMenuAnchorEl)}
+                                onClose={handleProfileMenuClose}
+                            >
+                                <MenuItem onClick={handleLogout}>
+                                    <ListItemIcon>
+                                        <ExitToAppIcon />
+                                    </ListItemIcon>
+                                    <ListItemText>Logout</ListItemText>
+                                </MenuItem>
+                            </Menu>
                         </>
                     )}
                 </Toolbar>
