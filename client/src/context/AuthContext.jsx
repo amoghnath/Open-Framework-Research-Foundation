@@ -22,28 +22,42 @@ export const AuthProvider = ({ children }) => {
                     setCurrentUser(data.user);
                     setIsAuthenticated(true);
                 } else {
-                    throw new Error('Token verification failed');
+                    setIsAuthenticated(false);
                 }
             } catch (error) {
-                console.error('Error verifying token:', error);
-                setCurrentUser(null);
                 setIsAuthenticated(false);
             }
         };
 
         verifyToken();
     }, []);
-    const login = (userData) => {
-        setCurrentUser(userData);
-        setIsAuthenticated(true);
-        // The token is stored in HTTP-only cookies, so no need to manage it here
+
+    const login = async ({ email, password, role }) => {
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, role }),
+                credentials: 'include',
+            });
+
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.message || 'An error occurred');
+            }
+
+            setCurrentUser(result.user);
+            setIsAuthenticated(true);
+        } catch (error) {
+            throw error;
+        }
     };
 
     const logout = async () => {
         try {
             const response = await fetch('/api/auth/logout', {
                 method: 'POST',
-                credentials: 'include', // to include the HTTP-only cookies in the request
+                credentials: 'include',
             });
             if (response.ok) {
                 setCurrentUser(null);
