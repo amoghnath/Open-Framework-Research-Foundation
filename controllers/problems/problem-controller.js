@@ -1,4 +1,5 @@
 const { Problem } = require("../../models/Problem");
+const { Uploader } = require("../../models/Uploader");
 const jwt = require("jsonwebtoken");
 
 const problemController = {
@@ -56,7 +57,15 @@ const problemController = {
         try {
             const { problemId } = req.params; // Extract the problem ID from the route parameters
 
-            const problem = await Problem.findByPk(problemId); // Use Sequelize's findByPk method to fetch the problem
+            // Use Sequelize's findByPk method to fetch the problem along with the uploader details
+            const problem = await Problem.findByPk(problemId, {
+                include: [{
+                    model: Uploader,
+                    attributes: {
+                        exclude: ['uploaderPassword'] // Exclude sensitive information like password
+                    }
+                }]
+            });
 
             if (!problem) {
                 return res.status(404).json({ message: "Problem not found" });
@@ -67,6 +76,7 @@ const problemController = {
             res.status(500).json({ message: "Error fetching problem", error: error.message });
         }
     }
+
 };
 
 module.exports = problemController;

@@ -84,15 +84,12 @@ function CreateProblemForm() {
                         <Grid item xs={6}>
                             <Alert
                                 severity='info'
-                                sx={{
-                                    border: '2px solid #1976d2', // Adjust the color as needed
-                                }}
                             >
                                 <Typography variant='h5' gutterBottom>
                                     Terms and Conditions
                                 </Typography>
                                 <Typography variant='body2' gutterBottom>
-                                    By registering, you agree to the following
+                                    By uploading a problem, you agree to the following
                                     terms:
                                 </Typography>
                                 <List
@@ -133,6 +130,74 @@ function CreateProblemForm() {
                                     </ListItem>
                                     <ListItem disablePadding>
                                         <ListItemText primary='Accept responsibility for the accuracy and completeness of the submitted problem and its details.' />
+                                    </ListItem>
+                                </List>
+                            </Alert>
+                            <Alert
+                                severity='warning'
+                                sx={{
+                                    mt: 2,
+                                }}
+                            >
+                                <Typography variant='h5' gutterBottom>
+                                    Points to be included
+                                </Typography>
+                                <Typography variant='body2' gutterBottom>
+                                    Ensure that these points are taken into consideration:
+                                </Typography>
+                                <List
+                                    sx={{
+                                        listStyleType: 'disc',
+                                        pl: 2,
+                                        '& .MuiListItem-root': {
+                                            display: 'list-item',
+                                        },
+                                    }}
+                                >
+                                    <ListItem disablePadding>
+                                        <ListItemText
+                                            primary={
+                                                <Typography component="span">
+                                                    <strong>Target Audience:</strong> Students, Professionals, Hobbyists.
+                                                </Typography>
+                                            }
+                                        />
+                                    </ListItem>
+                                    <ListItem disablePadding>
+                                        <ListItemText
+                                            primary={
+                                                <Typography component="span">
+                                                    <strong>Collaboration Options:</strong> Individual, Team, Open for both.
+                                                </Typography>
+                                            }
+                                        />
+                                    </ListItem>
+                                    <ListItem disablePadding>
+                                        <ListItemText
+                                            primary={
+                                                <Typography component="span">
+                                                    <strong>Contact Information:</strong> Email address, Phone number, Preferred communication method (e.g., email, phone, messaging app).
+                                                </Typography>
+                                            }
+                                        />
+                                    </ListItem>
+                                    <ListItem disablePadding>
+                                        <ListItemText
+                                            primary={
+                                                <Typography component="span">
+                                                    <strong>References:</strong> Link input for external resources or references.
+                                                </Typography>
+                                            }
+                                        />
+                                    </ListItem>
+                                    <ListItem disablePadding>
+                                        <ListItemText
+                                            primary={
+                                                <Typography component="span">
+                                                    <strong>Previous Solutions/Attempts:</strong> Text area for detailing previous solutions or attempts related to the problem.
+                                                </Typography>
+                                            }
+                                        />
                                     </ListItem>
 
                                 </List>
