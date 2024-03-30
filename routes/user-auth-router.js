@@ -78,5 +78,38 @@ router.post("/login", authController.login);
  */
 router.post("/logout", authController.logout);
 
+/**
+ * @swagger
+ * /api/auth/verifyToken:
+ *   get:
+ *     summary: Token verification
+ *     description: Verifies the authenticity of the user's token to maintain the session.
+ *     tags:
+ *       - authentication
+ *     responses:
+ *       200:
+ *         description: Token is valid
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     email:
+ *                       type: string
+ *                     role:
+ *                       type: string
+ *       401:
+ *         description: Token is invalid or expired
+ *       500:
+ *         description: Server error
+ */
+router.get("/verifyToken", authController.verifyToken);
 
 module.exports = router;

@@ -8,6 +8,8 @@ import {
     Box,
     Typography,
     Container,
+    Snackbar,
+    Alert,
 } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
@@ -35,15 +37,26 @@ export default function Login() {
     })
     const [role, setRole] = useState('uploader')
     const { login } = useAuth()
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false);
+    };
 
     const onSubmit = async (data) => {
         try {
-            await login({ ...data, role })
-            alert('Login successful')
+            await login({ ...data, role });
+            alert('Login successful'); // Consider replacing this alert with a snackbar or redirecting the user
         } catch (error) {
-            alert(`Login failed: ${error.message}`)
+            setSnackbarMessage(error.message);
+            setSnackbarOpen(true);
         }
-    }
+    };
+
 
     return (
         <Container component='main' maxWidth='xs'>
@@ -52,6 +65,7 @@ export default function Login() {
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
+                    mt: -20,
                 }}
             >
                 <Avatar
@@ -95,6 +109,7 @@ export default function Login() {
                         onChange={(e, newRole) => setRole(newRole)}
                         fullWidth
                         sx={{
+                            mt: 2,
                             '& .MuiToggleButton-root': { borderColor: 'black' },
                             '& .MuiToggleButton-root.Mui-selected': {
                                 backgroundColor: 'black',
@@ -139,6 +154,23 @@ export default function Login() {
                     </Button>
                 </Box>
             </Box>
+            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+                <Alert
+                    onClose={handleSnackbarClose}
+                    severity="error"
+                    sx={{
+                        width: '100%', // Adjust the width as needed
+                        fontSize: '1.25rem', // Increase font size for bigger text
+                        padding: '20px', // Add more padding to make the alert larger
+                        border: '2px solid firebrick', // Add a border, change the color and size as needed
+                        borderRadius: '4px', // Optional: add border radius for rounded corners
+                    }}
+                >
+                    {snackbarMessage}
+                </Alert>
+
+            </Snackbar>
+
         </Container>
     )
 }

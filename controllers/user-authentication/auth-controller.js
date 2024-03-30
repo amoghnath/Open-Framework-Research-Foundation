@@ -74,6 +74,26 @@ const authController = {
         }
     },
 
+    async verifyToken(req, res) {
+        try {
+            const token = req.cookies['user-session-token'];
+            if (!token) {
+                return res.status(401).json({ message: 'No token provided' });
+            }
+
+            jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+                if (err) {
+                    return res.status(401).json({ message: 'Token verification failed' });
+                }
+
+                // Optionally retrieve user details from the database and send it back
+                res.json({ message: 'Token verified', user: decoded });
+            });
+        } catch (error) {
+            res.status(500).json({ message: "Error during token verification", error: error.message });
+        }
+    },
+
     async logout(req, res) {
         try {
             res.clearCookie("user-session-token", {

@@ -39,22 +39,6 @@ app.use(helmet());
 app.use(compression());
 app.use(express.json()); // Parse JSON bodies
 
-app.get('/api/auth/verifyToken', (req, res) => {
-    const token = req.cookies['user-session-token'];
-    if (!token) {
-        return res.status(401).json({ message: 'No token provided' });
-    }
-
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if (err) {
-            return res.status(401).json({ message: 'Token verification failed' });
-        }
-
-        // Optionally retrieve user details from the database and send it back
-        res.json({ message: 'Token verified', user: decoded });
-    });
-});
-
 // Swagger Documentation Setup
 const swaggerOptions = {
     definition: {
