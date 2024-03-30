@@ -18,6 +18,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useAuth } from '../context/AuthContext'
+import { Navigate } from 'react-router-dom'
 
 const validationSchema = yup.object({
     email: yup
@@ -50,7 +51,7 @@ export default function Login() {
     const onSubmit = async (data) => {
         try {
             await login({ ...data, role });
-            alert('Login successful'); // Consider replacing this alert with a snackbar or redirecting the user
+            Navigate("/")
         } catch (error) {
             setSnackbarMessage(error.message);
             setSnackbarOpen(true);
