@@ -29,7 +29,7 @@ export default function UploaderRegistrationForm() {
 
     const onSubmit = async (data) => {
         try {
-            const response = await fetch('http://localhost:3000/api/register/uploader', {
+            const response = await fetch('/api/register/uploader', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

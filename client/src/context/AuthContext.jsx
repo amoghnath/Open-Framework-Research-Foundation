@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const verifyToken = async () => {
             try {
-                const response = await fetch('http://localhost:3000/api/auth/verifyToken', {
+                const response = await fetch('/api/auth/verifyToken', {
                     method: 'GET',
                     credentials: 'include',
                 });

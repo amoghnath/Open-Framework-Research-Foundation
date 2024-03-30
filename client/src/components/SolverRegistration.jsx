@@ -29,7 +29,7 @@ export default function SolverRegistrationForm() {
 
     const onSubmit = async (data) => {
         try {
-            const response = await fetch('http://localhost:3000/api/register/solver', {
+            const response = await fetch('/api/register/solver', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
