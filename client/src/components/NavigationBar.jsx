@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     AppBar, Box, Toolbar, Typography, Button, Menu, MenuItem, ListItemIcon,
     ListItemText, Avatar,
@@ -10,13 +10,20 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import SchoolIcon from '@mui/icons-material/School';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import { useAuth } from '../context/AuthContext'; // Import useAuth
+import { useAuth } from '../context/AuthContext';
 
 export default function NavigationBar() {
     const [anchorEl, setAnchorEl] = useState(null);
     const [profileMenuAnchorEl, setProfileMenuAnchorEl] = useState(null);
     const navigate = useNavigate();
     const { isAuthenticated, currentUser, logout } = useAuth();
+
+    useEffect(() => {
+        if (isAuthenticated && currentUser?.role === 'uploader') {
+            // Logic to handle the visibility of the Create Problem button
+            // This can trigger a re-render if needed
+        }
+    }, [isAuthenticated, currentUser]);
 
     const handleRegisterClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -42,8 +49,7 @@ export default function NavigationBar() {
 
     const handleLogout = () => {
         logout();
-        navigate('/');
-        handleProfileMenuClose();
+        handleNavigation('/');
     };
 
     return (
@@ -109,25 +115,26 @@ export default function NavigationBar() {
                         </>
                     )}
 
+                    {isAuthenticated && currentUser?.role === 'uploader' && (
+                        <Button
+                            variant="contained"
+                            sx={{
+                                margin: 1,
+                                color: 'white',
+                                backgroundColor: 'black',
+                                '&:hover': {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                }
+                            }}
+                            startIcon={<AddCircleOutlineIcon />}
+                            onClick={() => handleNavigation('/create-problem')}
+                        >
+                            Create Problem
+                        </Button>
+                    )}
+
                     {isAuthenticated && (
                         <>
-                            {currentUser?.role === 'uploader' && (
-                                <Button
-                                    variant="contained"
-                                    sx={{
-                                        margin: 1,
-                                        color: 'white',
-                                        backgroundColor: 'black',
-                                        '&:hover': {
-                                            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                                        }
-                                    }}
-                                    startIcon={<AddCircleOutlineIcon style={{ color: 'white' }} />}
-                                    onClick={() => handleNavigation('/create-problem')}
-                                >
-                                    Create Problem
-                                </Button>
-                            )}
                             <Avatar
                                 onClick={handleProfileMenuClick}
                                 sx={{ cursor: 'pointer', marginLeft: '10px' }}
@@ -140,9 +147,7 @@ export default function NavigationBar() {
                                 onClose={handleProfileMenuClose}
                             >
                                 <MenuItem onClick={handleLogout}>
-                                    <ListItemIcon>
-                                        <ExitToAppIcon />
-                                    </ListItemIcon>
+                                    <ListItemIcon><ExitToAppIcon /></ListItemIcon>
                                     <ListItemText>Logout</ListItemText>
                                 </MenuItem>
                             </Menu>

@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
                 throw new Error(result.message || 'An error occurred');
             }
 
-            setCurrentUser(result.user);
+            setCurrentUser({ ...result.user, role }); // Include role in user data
             setIsAuthenticated(true);
         } catch (error) {
             throw error;
