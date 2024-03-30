@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import {
     Container,
     Box,
@@ -15,45 +18,60 @@ import {
     Alert,
     List,
     ListItem,
-    ListItemText
+    ListItemText,
+    CircularProgress
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { useSnackbar } from '../context/SnackBarContext';
+import { useNavigate } from 'react-router-dom';
+
+// Yup schema
+const schema = yup.object({
+    problemTitle: yup.string().required('Problem title is required'),
+    problemDescription: yup.string().required('Problem description is required'),
+    problemReward: yup.number().positive('Reward must be a positive number').required('Reward is required'),
+    problemDeadlineDate: yup.date().required('Deadline date is required').nullable(),
+}).required();
 
 function CreateProblemForm() {
-    const [problemTitle, setProblemTitle] = useState('');
-    const [problemDescription, setProblemDescription] = useState('');
-    const [problemReward, setProblemReward] = useState('');
-    const [problemDeadlineDate, setProblemDeadlineDate] = useState(null);
-    const [errors, setErrors] = useState({});
+    const { openSnackbar } = useSnackbar();
+    const navigate = useNavigate();
+    const { register, handleSubmit, control, formState: { errors }, setValue } = useForm({
+        resolver: yupResolver(schema)
+    });
 
-    const validateForm = () => {
-        let tempErrors = {};
-        tempErrors.problemTitle = problemTitle ? '' : 'Problem title is required';
-        tempErrors.problemDescription = problemDescription ? '' : 'Problem description is required';
-        tempErrors.problemReward = problemReward && !isNaN(problemReward) ? '' : 'Reward must be a number';
-        tempErrors.problemDeadlineDate = problemDeadlineDate ? '' : 'Deadline date is required';
+    const onSubmit = async (data) => {
+        const { problemTitle, problemDescription, problemReward, problemDeadlineDate } = data;
 
-        setErrors(tempErrors);
-        return Object.values(tempErrors).every(x => x === "");
-    };
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        if (validateForm()) {
-            alert('Form submitted, check the console for details.');
-            console.log({
-                problemTitle,
-                problemDescription,
-                problemReward,
-                problemDeadlineDate: problemDeadlineDate?.format(), // Convert Dayjs object to string
+        try {
+            const response = await fetch('/api/problem/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    problemTitle,
+                    problemDescription,
+                    problemReward,
+                    problemDeadlineDate: problemDeadlineDate?.toISOString(), // Use ISO string format for date
+                })
             });
-            // Here you would handle form submission, e.g., calling an API
-        } else {
-            console.log('Validation errors', errors);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            openSnackbar('Problem created successfully');
+            navigate('/');
+        } catch (error) {
+            console.error('Error creating problem:', error);
+            openSnackbar('Error creating problem');
         }
     };
 
@@ -61,10 +79,8 @@ function CreateProblemForm() {
         <Container maxWidth={false} component='main' sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
             <Paper sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <Box sx={{ p: 3, height: '100%' }}>
-                    <Typography component='h1' variant='h5' mb={3}>
-                        Create New Problem
-                    </Typography>
                     <Grid container spacing={2}>
+                        {/* Terms and conditions and form fields here */}
                         <Grid item xs={6}>
                             <Alert
                                 severity='info'
@@ -123,61 +139,78 @@ function CreateProblemForm() {
                             </Alert>
                         </Grid>
                         <Grid item xs={6}>
-                            <Box component='form' noValidate onSubmit={handleSubmit}>
+                            <Typography component='h1' variant='h5' mb={3}>
+                                Create New Problem
+                            </Typography>
+                            <Box component='form' noValidate onSubmit={handleSubmit(onSubmit)}>
                                 <TextField
                                     margin='normal'
                                     required
                                     fullWidth
                                     id='problemTitle'
                                     label='Problem Title'
-                                    name='problemTitle'
-                                    value={problemTitle}
-                                    onChange={(e) => setProblemTitle(e.target.value)}
+                                    {...register('problemTitle')}
                                     error={!!errors.problemTitle}
-                                    helperText={errors.problemTitle}
+                                    helperText={errors.problemTitle?.message}
                                 />
                                 <FormControl fullWidth sx={{ mt: 2, mb: 2 }}>
                                     <InputLabel htmlFor='problemReward'>Reward</InputLabel>
                                     <OutlinedInput
                                         id='problemReward'
                                         startAdornment={<InputAdornment position='start'>$</InputAdornment>}
-                                        value={problemReward}
-                                        onChange={(e) => setProblemReward(e.target.value)}
+                                        {...register('problemReward')}
                                         error={!!errors.problemReward}
+                                        aria-describedby="problemReward-text"
                                     />
-                                    <Typography variant="caption" color="error">
-                                        {errors.problemReward}
+                                    <Typography variant="caption" color="error" id="problemReward-text">
+                                        {errors.problemReward?.message}
                                     </Typography>
                                 </FormControl>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <DatePicker
-                                        label='Deadline Date'
-                                        value={problemDeadlineDate}
-                                        onChange={setProblemDeadlineDate}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                fullWidth
-                                                sx={{ mt: 2 }}
-                                                error={!!errors.problemDeadlineDate}
-                                                helperText={errors.problemDeadlineDate}
+                                    <Controller
+                                        name="problemDeadlineDate"
+                                        control={control}
+                                        defaultValue={null}
+                                        render={({ field }) => (
+                                            <DatePicker
+                                                label="Deadline Date"
+                                                {...field}
+                                                renderInput={(params) => <TextField {...params} error={!!errors.problemDeadlineDate} helperText={errors.problemDeadlineDate?.message} />}
                                             />
                                         )}
                                     />
                                 </LocalizationProvider>
-                                <Divider sx={{ mt: 2, mb: 2 }} />
-                                <Typography variant='subtitle2' gutterBottom>
-                                    Problem Description:
+                                <Typography variant='subtitle2' gutterBottom sx={{ mt: 2 }}>
+                                    Problem Description
                                 </Typography>
-                                <CKEditor
-                                    editor={ClassicEditor}
-                                    data={problemDescription}
-                                    onChange={(event, editor) => setProblemDescription(editor.getData())}
+                                <Controller
+                                    name="problemDescription"
+                                    control={control}
+                                    defaultValue=""
+                                    render={({ field }) => (
+                                        <CKEditor
+                                            editor={ClassicEditor}
+                                            data={field.value}
+                                            onChange={(event, editor) => {
+                                                setValue('problemDescription', editor.getData());
+                                            }}
+                                        />
+                                    )}
                                 />
-                                <Typography variant="caption" color="error">
-                                    {errors.problemDescription}
-                                </Typography>
-                                <Button type='submit' fullWidth variant='contained' sx={{ mt: 3 }}>
+                                {errors.problemDescription && (
+                                    <Typography color="error">
+                                        {errors.problemDescription.message}
+                                    </Typography>
+                                )}
+                                <Button type='submit' fullWidth variant='contained' sx={{
+                                    mt: 3,
+                                    padding: '15px',
+                                    backgroundColor: 'black', // Set background color to black
+                                    color: 'white', // Set text color to white
+                                    '&:hover': {
+                                        backgroundColor: 'rgba(0, 0, 0, 0.8)', // Subtle black on hover
+                                    },
+                                }}>
                                     Create Problem
                                 </Button>
                             </Box>
@@ -185,7 +218,7 @@ function CreateProblemForm() {
                     </Grid>
                 </Box>
             </Paper>
-        </Container >
+        </Container>
     );
 }
 

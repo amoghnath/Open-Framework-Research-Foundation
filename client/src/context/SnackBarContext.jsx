@@ -31,11 +31,18 @@ export const SnackbarProvider = ({ children }) => {
                     onClose={closeSnackbar}
                     variant="filled"
                     severity="info"
-                    sx={{ width: '100%' }}
+                    sx={{
+                        width: '100%',
+                        backgroundColor: 'white', // Set background color to white
+                        color: 'black', // Set text color to black
+                        border: '1px solid black', // Set border to black
+                        fontSize: '1.1rem', // Increase font size
+                        padding: '16px', // Increase padding
+                    }}
                 >
                     {snackbarMessage}
                 </MuiAlert>
             </Snackbar>
-        </SnackbarContext.Provider>
+        </SnackbarContext.Provider >
     );
 };
