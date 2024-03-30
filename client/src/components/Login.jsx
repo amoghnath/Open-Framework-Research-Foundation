@@ -38,26 +38,25 @@ export default function Login() {
     })
     const [role, setRole] = useState('uploader')
     const { login } = useAuth()
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarOpen, setSnackbarOpen] = useState(false)
+    const [snackbarMessage, setSnackbarMessage] = useState('')
 
     const handleSnackbarClose = (event, reason) => {
         if (reason === 'clickaway') {
-            return;
+            return
         }
-        setSnackbarOpen(false);
-    };
+        setSnackbarOpen(false)
+    }
 
     const onSubmit = async (data) => {
         try {
-            await login({ ...data, role });
-            Navigate("/")
+            await login({ ...data, role })
+            Navigate('/')
         } catch (error) {
-            setSnackbarMessage(error.message);
-            setSnackbarOpen(true);
+            setSnackbarMessage(error.message)
+            setSnackbarOpen(true)
         }
-    };
-
+    }
 
     return (
         <Container component='main' maxWidth='xs'>
@@ -155,10 +154,14 @@ export default function Login() {
                     </Button>
                 </Box>
             </Box>
-            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={handleSnackbarClose}
+            >
                 <Alert
                     onClose={handleSnackbarClose}
-                    severity="error"
+                    severity='error'
                     sx={{
                         width: '100%', // Adjust the width as needed
                         fontSize: '1.25rem', // Increase font size for bigger text
@@ -169,9 +172,7 @@ export default function Login() {
                 >
                     {snackbarMessage}
                 </Alert>
-
             </Snackbar>
-
         </Container>
     )
 }

@@ -1,61 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import {
-    AppBar, Box, Toolbar, Typography, Button, Menu, MenuItem, ListItemIcon,
-    ListItemText, Avatar, Dialog, DialogActions, DialogContent, DialogContentText,
+    AppBar,
+    Box,
+    Toolbar,
+    Typography,
+    Button,
+    Menu,
+    MenuItem,
+    ListItemIcon,
+    ListItemText,
+    Avatar,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
     DialogTitle,
-} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import LoginIcon from '@mui/icons-material/Login';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import SchoolIcon from '@mui/icons-material/School';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import LogoutIcon from '@mui/icons-material/Logout';
-import FaceIcon from '@mui/icons-material/Face';
-import { useAuth } from '../context/AuthContext';
+} from '@mui/material'
+import { useNavigate } from 'react-router-dom'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import LoginIcon from '@mui/icons-material/Login'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import SchoolIcon from '@mui/icons-material/School'
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
+import LogoutIcon from '@mui/icons-material/Logout'
+import FaceIcon from '@mui/icons-material/Face'
+import { useAuth } from '../context/AuthContext'
 
 export default function NavigationBar() {
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [profileMenuAnchorEl, setProfileMenuAnchorEl] = useState(null);
-    const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
-    const navigate = useNavigate();
-    const { isAuthenticated, currentUser, logout } = useAuth();
+    const [anchorEl, setAnchorEl] = useState(null)
+    const [profileMenuAnchorEl, setProfileMenuAnchorEl] = useState(null)
+    const [logoutDialogOpen, setLogoutDialogOpen] = useState(false)
+    const navigate = useNavigate()
+    const { isAuthenticated, currentUser, logout } = useAuth()
 
     const handleRegisterClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
+        setAnchorEl(event.currentTarget)
+    }
 
     const handleClose = () => {
-        setAnchorEl(null);
-    };
+        setAnchorEl(null)
+    }
 
     const handleProfileMenuClick = (event) => {
-        setProfileMenuAnchorEl(event.currentTarget);
-    };
+        setProfileMenuAnchorEl(event.currentTarget)
+    }
 
     const handleProfileMenuClose = () => {
-        setProfileMenuAnchorEl(null);
-    };
+        setProfileMenuAnchorEl(null)
+    }
 
     const handleNavigation = (path) => {
-        navigate(path);
-        handleClose();
-        handleProfileMenuClose();
-    };
+        navigate(path)
+        handleClose()
+        handleProfileMenuClose()
+    }
 
     const handleLogoutClick = () => {
-        setLogoutDialogOpen(true);
-    };
+        setLogoutDialogOpen(true)
+    }
 
     const handleLogoutConfirm = () => {
-        logout();
-        handleNavigation('/');
-        setLogoutDialogOpen(false);
-    };
+        logout()
+        handleNavigation('/')
+        setLogoutDialogOpen(false)
+    }
 
     const handleLogoutCancel = () => {
-        setLogoutDialogOpen(false);
-    };
+        setLogoutDialogOpen(false)
+    }
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -181,14 +193,34 @@ export default function NavigationBar() {
 
                     {isAuthenticated && (
                         <>
-                            <Avatar onClick={handleProfileMenuClick} sx={{ cursor: 'pointer', marginLeft: '10px', backgroundColor: 'black' }} alt='Profile' />
-                            <Menu anchorEl={profileMenuAnchorEl} open={Boolean(profileMenuAnchorEl)} onClose={handleProfileMenuClose}>
-                                <MenuItem onClick={() => handleNavigation('/my-profile')}>
-                                    <ListItemIcon><FaceIcon /></ListItemIcon>
+                            <Avatar
+                                onClick={handleProfileMenuClick}
+                                sx={{
+                                    cursor: 'pointer',
+                                    marginLeft: '10px',
+                                    backgroundColor: 'black',
+                                }}
+                                alt='Profile'
+                            />
+                            <Menu
+                                anchorEl={profileMenuAnchorEl}
+                                open={Boolean(profileMenuAnchorEl)}
+                                onClose={handleProfileMenuClose}
+                            >
+                                <MenuItem
+                                    onClick={() =>
+                                        handleNavigation('/my-profile')
+                                    }
+                                >
+                                    <ListItemIcon>
+                                        <FaceIcon />
+                                    </ListItemIcon>
                                     <ListItemText>My Profile</ListItemText>
                                 </MenuItem>
                                 <MenuItem onClick={handleLogoutClick}>
-                                    <ListItemIcon sx={{ color: 'red' }}><LogoutIcon /></ListItemIcon>
+                                    <ListItemIcon sx={{ color: 'red' }}>
+                                        <LogoutIcon />
+                                    </ListItemIcon>
                                     <ListItemText>Logout</ListItemText>
                                 </MenuItem>
                             </Menu>
@@ -196,18 +228,26 @@ export default function NavigationBar() {
                             <Dialog
                                 open={logoutDialogOpen}
                                 onClose={handleLogoutCancel}
-                                aria-labelledby="logout-dialog-title"
-                                aria-describedby="logout-dialog-description"
+                                aria-labelledby='logout-dialog-title'
+                                aria-describedby='logout-dialog-description'
                             >
-                                <DialogTitle id="logout-dialog-title">{"Confirm Logout"}</DialogTitle>
+                                <DialogTitle id='logout-dialog-title'>
+                                    {'Confirm Logout'}
+                                </DialogTitle>
                                 <DialogContent>
-                                    <DialogContentText id="logout-dialog-description">
+                                    <DialogContentText id='logout-dialog-description'>
                                         Are you sure you want to logout?
                                     </DialogContentText>
                                 </DialogContent>
                                 <DialogActions>
-                                    <Button onClick={handleLogoutCancel}>Cancel</Button>
-                                    <Button onClick={handleLogoutConfirm} autoFocus color="error">
+                                    <Button onClick={handleLogoutCancel}>
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        onClick={handleLogoutConfirm}
+                                        autoFocus
+                                        color='error'
+                                    >
                                         Logout
                                     </Button>
                                 </DialogActions>
@@ -217,5 +257,5 @@ export default function NavigationBar() {
                 </Toolbar>
             </AppBar>
         </Box>
-    );
+    )
 }

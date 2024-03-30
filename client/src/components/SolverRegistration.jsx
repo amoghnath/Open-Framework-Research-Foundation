@@ -16,13 +16,14 @@ import {
     ListItem,
     ListItemText,
     InputAdornment,
-    Snackbar,
 } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import Icon from '@mui/material/Icon'
+import { Navigate } from 'react-router-dom'
+import { useSnackbar } from '../context/SnackBarContext';
 
 const theme = createTheme()
 
@@ -58,8 +59,8 @@ export default function SolverRegistrationForm() {
     } = useForm({
         resolver: yupResolver(validationSchema),
     })
-    const [snackbarOpen, setSnackbarOpen] = useState(false)
-    const [snackbarMessage, setSnackbarMessage] = useState('')
+    const [loggedIn, setLoggedIn] = useState(false);
+    const { openSnackbar } = useSnackbar();
 
     const onSubmit = async (data) => {
         try {
@@ -75,18 +76,16 @@ export default function SolverRegistrationForm() {
             if (!response.ok) {
                 throw new Error(result.message || 'Something went wrong')
             }
-            alert('Registration successful')
+            setLoggedIn(true);
+            openSnackbar('You have successfully registered as a solver');
         } catch (error) {
-            setSnackbarMessage(`${error.message}`)
-            setSnackbarOpen(true)
+            openSnackbar(error.message || 'Something went wrong');
         }
     }
 
-    const handleSnackbarClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return
-        }
-        setSnackbarOpen(false)
+    // Redirect to /login if loggedIn is true
+    if (loggedIn) {
+        return <Navigate to="/login" />;
     }
 
     return (
@@ -365,19 +364,6 @@ export default function SolverRegistrationForm() {
                     </Box>
                 </Grid>
             </Grid>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={6000}
-                onClose={handleSnackbarClose}
-            >
-                <MUIAlert
-                    onClose={handleSnackbarClose}
-                    severity='error'
-                    sx={{ width: '100%' }}
-                >
-                    {snackbarMessage}
-                </MUIAlert>
-            </Snackbar>
         </ThemeProvider>
     )
 }

@@ -34,14 +34,6 @@ const uploaderController = {
                 return res.status(400).json({ message: "Phone number must be 10 digits long" });
             }
 
-            // Validate password (at least 8 characters, one lowercase, one uppercase, one number)
-            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-            if (!passwordRegex.test(uploaderPassword)) {
-                return res.status(400).json({
-                    message: "Password must be at least 8 characters long, including one lowercase letter, one uppercase letter, and one number"
-                });
-            }
-
             // Check for existing records with the same email, phone number, or business email
             const existingUploader = await Uploader.findOne({
                 where: {
