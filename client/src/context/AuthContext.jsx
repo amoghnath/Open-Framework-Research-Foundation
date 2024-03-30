@@ -1,16 +1,16 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { CircularProgress, Box } from '@mui/material';
+import React, { createContext, useContext, useState, useEffect } from 'react'
+import { CircularProgress, Box } from '@mui/material'
 
-const AuthContext = createContext();
+const AuthContext = createContext()
 
 export function useAuth() {
-    return useContext(AuthContext);
+    return useContext(AuthContext)
 }
 
 export const AuthProvider = ({ children }) => {
-    const [currentUser, setCurrentUser] = useState(null);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [loading, setLoading] = useState(true);  // Add a loading state
+    const [currentUser, setCurrentUser] = useState(null)
+    const [isAuthenticated, setIsAuthenticated] = useState(false)
+    const [loading, setLoading] = useState(true) // Add a loading state
 
     useEffect(() => {
         const verifyToken = async () => {
@@ -18,23 +18,23 @@ export const AuthProvider = ({ children }) => {
                 const response = await fetch('/api/auth/verifyToken', {
                     method: 'GET',
                     credentials: 'include',
-                });
+                })
                 if (response.ok) {
-                    const data = await response.json();
-                    setCurrentUser(data.user);
-                    setIsAuthenticated(true);
+                    const data = await response.json()
+                    setCurrentUser(data.user)
+                    setIsAuthenticated(true)
                 } else {
-                    setIsAuthenticated(false);
+                    setIsAuthenticated(false)
                 }
             } catch (error) {
-                setIsAuthenticated(false);
+                setIsAuthenticated(false)
             } finally {
-                setLoading(false);  // Set loading to false after the check
+                setLoading(false) // Set loading to false after the check
             }
-        };
+        }
 
-        verifyToken();
-    }, []);
+        verifyToken()
+    }, [])
 
     const login = async ({ email, password, role }) => {
         try {
@@ -43,53 +43,54 @@ export const AuthProvider = ({ children }) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password, role }),
                 credentials: 'include',
-            });
+            })
 
-            const result = await response.json();
+            const result = await response.json()
             if (!response.ok) {
-                throw new Error(result.message || 'An error occurred');
+                throw new Error(result.message || 'An error occurred')
             }
 
-            setCurrentUser({ ...result.user, role });  // Include role in user data
-            setIsAuthenticated(true);
+            setCurrentUser({ ...result.user, role }) // Include role in user data
+            setIsAuthenticated(true)
         } catch (error) {
-            throw error;
+            throw error
         }
-    };
+    }
 
     const logout = async () => {
         try {
             const response = await fetch('/api/auth/logout', {
                 method: 'POST',
                 credentials: 'include',
-            });
+            })
             if (response.ok) {
-                setCurrentUser(null);
-                setIsAuthenticated(false);
+                setCurrentUser(null)
+                setIsAuthenticated(false)
             }
         } catch (error) {
-            console.error('Error during logout:', error);
+            console.error('Error during logout:', error)
         }
-    };
+    }
 
     const value = {
         currentUser,
         isAuthenticated,
         login,
         logout,
-    };
+    }
 
     if (loading) {
         return (
-            <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-                <CircularProgress color="inherit" />
+            <Box
+                display='flex'
+                justifyContent='center'
+                alignItems='center'
+                height='100vh'
+            >
+                <CircularProgress color='inherit' />
             </Box>
-        );
+        )
     }
 
-    return (
-        <AuthContext.Provider value={value}>
-            {children}
-        </AuthContext.Provider>
-    );
-};
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+}

@@ -1,7 +1,7 @@
-import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import React from 'react'
+import { useForm, Controller } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 import {
     Container,
     Box,
@@ -14,38 +14,57 @@ import {
     InputAdornment,
     Grid,
     Paper,
-    Divider,
     Alert,
     List,
     ListItem,
     ListItemText,
-    CircularProgress
-} from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { useSnackbar } from '../context/SnackBarContext';
-import { useNavigate } from 'react-router-dom';
+} from '@mui/material'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { CKEditor } from '@ckeditor/ckeditor5-react'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import { useSnackbar } from '../context/SnackBarContext'
+import { useNavigate } from 'react-router-dom'
 
 // Yup schema
-const schema = yup.object({
-    problemTitle: yup.string().required('Problem title is required'),
-    problemDescription: yup.string().required('Problem description is required'),
-    problemReward: yup.number().positive('Reward must be a positive number').required('Reward is required'),
-    problemDeadlineDate: yup.date().required('Deadline date is required').nullable(),
-}).required();
+const schema = yup
+    .object({
+        problemTitle: yup.string().required('Problem title is required'),
+        problemDescription: yup
+            .string()
+            .required('Problem description is required'),
+        problemReward: yup
+            .number()
+            .positive('Reward must be a positive number')
+            .required('Reward is required'),
+        problemDeadlineDate: yup
+            .date()
+            .required('Deadline date is required')
+            .nullable(),
+    })
+    .required()
 
 function CreateProblemForm() {
-    const { openSnackbar } = useSnackbar();
-    const navigate = useNavigate();
-    const { register, handleSubmit, control, formState: { errors }, setValue } = useForm({
-        resolver: yupResolver(schema)
-    });
+    const { openSnackbar } = useSnackbar()
+    const navigate = useNavigate()
+    const {
+        register,
+        handleSubmit,
+        control,
+        formState: { errors },
+        setValue,
+    } = useForm({
+        resolver: yupResolver(schema),
+    })
 
     const onSubmit = async (data) => {
-        const { problemTitle, problemDescription, problemReward, problemDeadlineDate } = data;
+        const {
+            problemTitle,
+            problemDescription,
+            problemReward,
+            problemDeadlineDate,
+        } = data
 
         try {
             const response = await fetch('/api/problem/', {
@@ -59,38 +78,46 @@ function CreateProblemForm() {
                     problemDescription,
                     problemReward,
                     problemDeadlineDate: problemDeadlineDate?.toISOString(), // Use ISO string format for date
-                })
-            });
+                }),
+            })
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`HTTP error! status: ${response.status}`)
             }
 
-            const result = await response.json();
-            openSnackbar('Problem created successfully');
-            navigate('/');
+            const result = await response.json()
+            openSnackbar('Problem created successfully')
+            navigate('/')
         } catch (error) {
-            console.error('Error creating problem:', error);
-            openSnackbar('Error creating problem');
+            console.error('Error creating problem:', error)
+            openSnackbar('Error creating problem')
         }
-    };
+    }
 
     return (
-        <Container maxWidth={false} component='main' sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-            <Paper sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <Container
+            maxWidth={false}
+            component='main'
+            sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}
+        >
+            <Paper
+                sx={{
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}
+            >
                 <Box sx={{ p: 3, height: '100%' }}>
                     <Grid container spacing={2}>
                         {/* Terms and conditions and form fields here */}
                         <Grid item xs={6}>
-                            <Alert
-                                severity='info'
-                            >
+                            <Alert severity='info'>
                                 <Typography variant='h5' gutterBottom>
                                     Terms and Conditions
                                 </Typography>
                                 <Typography variant='body2' gutterBottom>
-                                    By uploading a problem, you agree to the following
-                                    terms:
+                                    By uploading a problem, you agree to the
+                                    following terms:
                                 </Typography>
                                 <List
                                     sx={{
@@ -143,7 +170,8 @@ function CreateProblemForm() {
                                     Points to be included
                                 </Typography>
                                 <Typography variant='body2' gutterBottom>
-                                    Ensure that these points are taken into consideration:
+                                    Ensure that these points are taken into
+                                    consideration:
                                 </Typography>
                                 <List
                                     sx={{
@@ -157,8 +185,12 @@ function CreateProblemForm() {
                                     <ListItem disablePadding>
                                         <ListItemText
                                             primary={
-                                                <Typography component="span">
-                                                    <strong>Target Audience:</strong> Students, Professionals, Hobbyists.
+                                                <Typography component='span'>
+                                                    <strong>
+                                                        Target Audience:
+                                                    </strong>{' '}
+                                                    Students, Professionals,
+                                                    Hobbyists.
                                                 </Typography>
                                             }
                                         />
@@ -166,8 +198,12 @@ function CreateProblemForm() {
                                     <ListItem disablePadding>
                                         <ListItemText
                                             primary={
-                                                <Typography component="span">
-                                                    <strong>Collaboration Options:</strong> Individual, Team, Open for both.
+                                                <Typography component='span'>
+                                                    <strong>
+                                                        Collaboration Options:
+                                                    </strong>{' '}
+                                                    Individual, Team, Open for
+                                                    both.
                                                 </Typography>
                                             }
                                         />
@@ -175,8 +211,14 @@ function CreateProblemForm() {
                                     <ListItem disablePadding>
                                         <ListItemText
                                             primary={
-                                                <Typography component="span">
-                                                    <strong>Contact Information:</strong> Email address, Phone number, Preferred communication method (e.g., email, phone, messaging app).
+                                                <Typography component='span'>
+                                                    <strong>
+                                                        Contact Information:
+                                                    </strong>{' '}
+                                                    Email address, Phone number,
+                                                    Preferred communication
+                                                    method (e.g., email, phone,
+                                                    messaging app).
                                                 </Typography>
                                             }
                                         />
@@ -184,8 +226,10 @@ function CreateProblemForm() {
                                     <ListItem disablePadding>
                                         <ListItemText
                                             primary={
-                                                <Typography component="span">
-                                                    <strong>References:</strong> Link input for external resources or references.
+                                                <Typography component='span'>
+                                                    <strong>References:</strong>{' '}
+                                                    Link input for external
+                                                    resources or references.
                                                 </Typography>
                                             }
                                         />
@@ -193,13 +237,19 @@ function CreateProblemForm() {
                                     <ListItem disablePadding>
                                         <ListItemText
                                             primary={
-                                                <Typography component="span">
-                                                    <strong>Previous Solutions/Attempts:</strong> Text area for detailing previous solutions or attempts related to the problem.
+                                                <Typography component='span'>
+                                                    <strong>
+                                                        Previous
+                                                        Solutions/Attempts:
+                                                    </strong>{' '}
+                                                    Text area for detailing
+                                                    previous solutions or
+                                                    attempts related to the
+                                                    problem.
                                                 </Typography>
                                             }
                                         />
                                     </ListItem>
-
                                 </List>
                             </Alert>
                         </Grid>
@@ -207,7 +257,11 @@ function CreateProblemForm() {
                             <Typography component='h1' variant='h5' mb={3}>
                                 Create New Problem
                             </Typography>
-                            <Box component='form' noValidate onSubmit={handleSubmit(onSubmit)}>
+                            <Box
+                                component='form'
+                                noValidate
+                                onSubmit={handleSubmit(onSubmit)}
+                            >
                                 <TextField
                                     margin='normal'
                                     required
@@ -219,63 +273,100 @@ function CreateProblemForm() {
                                     helperText={errors.problemTitle?.message}
                                 />
                                 <FormControl fullWidth sx={{ mt: 2, mb: 2 }}>
-                                    <InputLabel htmlFor='problemReward'>Reward</InputLabel>
+                                    <InputLabel htmlFor='problemReward'>
+                                        Reward
+                                    </InputLabel>
                                     <OutlinedInput
                                         id='problemReward'
-                                        startAdornment={<InputAdornment position='start'>$</InputAdornment>}
+                                        startAdornment={
+                                            <InputAdornment position='start'>
+                                                $
+                                            </InputAdornment>
+                                        }
                                         {...register('problemReward')}
                                         error={!!errors.problemReward}
-                                        aria-describedby="problemReward-text"
+                                        aria-describedby='problemReward-text'
                                     />
-                                    <Typography variant="caption" color="error" id="problemReward-text">
+                                    <Typography
+                                        variant='caption'
+                                        color='error'
+                                        id='problemReward-text'
+                                    >
                                         {errors.problemReward?.message}
                                     </Typography>
                                 </FormControl>
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <LocalizationProvider
+                                    dateAdapter={AdapterDayjs}
+                                >
                                     <Controller
-                                        name="problemDeadlineDate"
+                                        name='problemDeadlineDate'
                                         control={control}
                                         defaultValue={null}
                                         render={({ field }) => (
                                             <DatePicker
-                                                label="Deadline Date"
+                                                label='Deadline Date'
                                                 {...field}
-                                                renderInput={(params) => <TextField {...params} error={!!errors.problemDeadlineDate} helperText={errors.problemDeadlineDate?.message} />}
+                                                renderInput={(params) => (
+                                                    <TextField
+                                                        {...params}
+                                                        error={
+                                                            !!errors.problemDeadlineDate
+                                                        }
+                                                        helperText={
+                                                            errors
+                                                                .problemDeadlineDate
+                                                                ?.message
+                                                        }
+                                                    />
+                                                )}
                                             />
                                         )}
                                     />
                                 </LocalizationProvider>
-                                <Typography variant='subtitle2' gutterBottom sx={{ mt: 2 }}>
+                                <Typography
+                                    variant='subtitle2'
+                                    gutterBottom
+                                    sx={{ mt: 2 }}
+                                >
                                     Problem Description
                                 </Typography>
                                 <Controller
-                                    name="problemDescription"
+                                    name='problemDescription'
                                     control={control}
-                                    defaultValue=""
+                                    defaultValue=''
                                     render={({ field }) => (
                                         <CKEditor
                                             editor={ClassicEditor}
                                             data={field.value}
                                             onChange={(event, editor) => {
-                                                setValue('problemDescription', editor.getData());
+                                                setValue(
+                                                    'problemDescription',
+                                                    editor.getData()
+                                                )
                                             }}
                                         />
                                     )}
                                 />
                                 {errors.problemDescription && (
-                                    <Typography color="error">
+                                    <Typography color='error'>
                                         {errors.problemDescription.message}
                                     </Typography>
                                 )}
-                                <Button type='submit' fullWidth variant='contained' sx={{
-                                    mt: 3,
-                                    padding: '15px',
-                                    backgroundColor: 'black', // Set background color to black
-                                    color: 'white', // Set text color to white
-                                    '&:hover': {
-                                        backgroundColor: 'rgba(0, 0, 0, 0.8)', // Subtle black on hover
-                                    },
-                                }}>
+                                <Button
+                                    type='submit'
+                                    fullWidth
+                                    variant='contained'
+                                    sx={{
+                                        mt: 3,
+                                        padding: '15px',
+                                        backgroundColor: 'black', // Set background color to black
+                                        color: 'white', // Set text color to white
+                                        '&:hover': {
+                                            backgroundColor:
+                                                'rgba(0, 0, 0, 0.8)', // Subtle black on hover
+                                        },
+                                    }}
+                                >
                                     Create Problem
                                 </Button>
                             </Box>
@@ -284,7 +375,7 @@ function CreateProblemForm() {
                 </Box>
             </Paper>
         </Container>
-    );
+    )
 }
 
-export default CreateProblemForm;
+export default CreateProblemForm

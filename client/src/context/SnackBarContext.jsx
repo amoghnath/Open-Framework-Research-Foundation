@@ -1,23 +1,23 @@
-import React, { createContext, useState, useContext } from 'react';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import React, { createContext, useState, useContext } from 'react'
+import Snackbar from '@mui/material/Snackbar'
+import MuiAlert from '@mui/material/Alert'
 
-const SnackbarContext = createContext();
+const SnackbarContext = createContext()
 
-export const useSnackbar = () => useContext(SnackbarContext);
+export const useSnackbar = () => useContext(SnackbarContext)
 
 export const SnackbarProvider = ({ children }) => {
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('')
+    const [snackbarOpen, setSnackbarOpen] = useState(false)
 
     const openSnackbar = (message) => {
-        setSnackbarMessage(message);
-        setSnackbarOpen(true);
-    };
+        setSnackbarMessage(message)
+        setSnackbarOpen(true)
+    }
 
     const closeSnackbar = () => {
-        setSnackbarOpen(false);
-    };
+        setSnackbarOpen(false)
+    }
 
     return (
         <SnackbarContext.Provider value={{ openSnackbar, closeSnackbar }}>
@@ -29,8 +29,8 @@ export const SnackbarProvider = ({ children }) => {
             >
                 <MuiAlert
                     onClose={closeSnackbar}
-                    variant="filled"
-                    severity="info"
+                    variant='filled'
+                    severity='info'
                     sx={{
                         width: '100%',
                         backgroundColor: 'white', // Set background color to white
@@ -43,6 +43,6 @@ export const SnackbarProvider = ({ children }) => {
                     {snackbarMessage}
                 </MuiAlert>
             </Snackbar>
-        </SnackbarContext.Provider >
-    );
-};
+        </SnackbarContext.Provider>
+    )
+}

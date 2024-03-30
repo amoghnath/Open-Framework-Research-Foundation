@@ -11,12 +11,10 @@ import {
     createTheme,
     ThemeProvider,
     Alert,
-    Alert as MUIAlert,
     List,
     ListItem,
     ListItemText,
     InputAdornment,
-    Snackbar,
 } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send'
 import { useForm, Controller } from 'react-hook-form'
@@ -24,7 +22,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import Icon from '@mui/material/Icon'
 import { Navigate } from 'react-router-dom'
-import { useSnackbar } from '../context/SnackBarContext';
+import { useSnackbar } from '../context/SnackBarContext'
 
 const theme = createTheme()
 
@@ -60,8 +58,8 @@ export default function UploaderRegistrationForm() {
     } = useForm({
         resolver: yupResolver(validationSchema),
     })
-    const [loggedIn, setLoggedIn] = useState(false);
-    const { openSnackbar } = useSnackbar();
+    const [loggedIn, setLoggedIn] = useState(false)
+    const { openSnackbar } = useSnackbar()
 
     const onSubmit = async (data) => {
         try {
@@ -77,16 +75,16 @@ export default function UploaderRegistrationForm() {
             if (!response.ok) {
                 throw new Error(result.message || 'Something went wrong')
             }
-            setLoggedIn(true);
-            openSnackbar('You have successfully registered as an uploader');
+            setLoggedIn(true)
+            openSnackbar('You have successfully registered as an uploader')
         } catch (error) {
-            openSnackbar(error.message || 'Something went wrong');
+            openSnackbar(error.message || 'Something went wrong')
         }
     }
 
     // Redirect to /login if loggedIn is true
     if (loggedIn) {
-        return <Navigate to="/login" />;
+        return <Navigate to='/login' />
     }
 
     return (
