@@ -56,6 +56,5 @@ router.get("/", authenticateToken, solutionController.readAllBySolver);
  *       403:
  *         description: Access forbidden - user is not in the solver role
  */
-router.post("/", authenticateToken, requireRole("solver"), solutionController.create);
-
+router.post("/:problemId", authenticateToken, requireRole("solver"), solutionController.create);
 module.exports = router;

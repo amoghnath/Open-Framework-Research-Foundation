@@ -102,7 +102,7 @@ function ProblemDetails() {
         }
     }, [problemId])
 
-    const handleSolutionSubmission = () => navigate(`/submit-solution/${problemId}`)
+    const handleSolutionSubmission = () => navigate(`/${problemId}`)
     const handleRegistrationNavigation = () => navigate('/register/solver')
     const handleLoginNavigation = () => navigate('/login')
 
@@ -202,13 +202,22 @@ function ProblemDetails() {
                         gap: theme.spacing(1),
                     }}
                 >
-                    <ChipDetail
+                    <Chip
                         icon={<MonetizationOnIcon />}
-                        label={`₹${new Intl.NumberFormat('en-IN').format(problem.problemReward)}`}
+                        label={`Reward: ₹${new Intl.NumberFormat('en-IN').format(
+                            problem.problemReward
+                        )}`}
+                        variant='outlined'
                     />
-                    <ChipDetail
+                    <Chip
                         icon={<EventIcon />}
-                        label={new Date(problem.problemDeadlineDate).toLocaleDateString()}
+                        label={`Deadline: ${new Date(problem.problemDeadlineDate).toLocaleDateString('en-US', {
+                            weekday: 'long', // "Monday"
+                            year: 'numeric', // "2023"
+                            month: 'long', // "July"
+                            day: 'numeric' // "20"
+                        })}`}
+                        variant='outlined'
                     />
                     <ChipDetail
                         icon={<AccessTimeIcon />}

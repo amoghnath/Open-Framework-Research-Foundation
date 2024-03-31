@@ -86,9 +86,12 @@ function Home() {
                                 />
                                 <Chip
                                     icon={<EventIcon />}
-                                    label={`Deadline: ${new Date(
-                                        problem.problemDeadlineDate
-                                    ).toLocaleDateString()}`}
+                                    label={`Deadline: ${new Date(problem.problemDeadlineDate).toLocaleDateString('en-US', {
+                                        weekday: 'long', // "Monday"
+                                        year: 'numeric', // "2023"
+                                        month: 'long', // "July"
+                                        day: 'numeric' // "20"
+                                    })}`}
                                     variant='outlined'
                                 />
                             </div>

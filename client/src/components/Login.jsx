@@ -8,8 +8,6 @@ import {
     Box,
     Typography,
     Container,
-    Snackbar,
-    Alert,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -18,6 +16,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useAuth } from '../context/AuthContext';
+import { useSnackbar } from '../context/SnackBarContext';
 import { Navigate } from 'react-router-dom';
 
 const validationSchema = yup.object({
@@ -26,34 +25,20 @@ const validationSchema = yup.object({
 });
 
 export default function Login() {
-    const [role, setRole] = useState('uploader');
-    const { login } = useAuth();
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm({
+    const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(validationSchema),
     });
+    const [role, setRole] = useState('uploader');
+    const { login } = useAuth();
+    const { openSnackbar } = useSnackbar();
 
     const onSubmit = async (data) => {
         try {
             await login({ ...data, role });
             return <Navigate to='/' />;
         } catch (error) {
-            setSnackbarMessage(error.message);
-            setSnackbarOpen(true);
+            openSnackbar(error.message);
         }
-    };
-
-    const handleSnackbarClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setSnackbarOpen(false);
     };
 
     return (
@@ -65,11 +50,6 @@ export default function Login() {
                 role={role}
                 setRole={setRole}
             />
-            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-                <Alert onClose={handleSnackbarClose} severity='error' sx={{ width: '100%' }}>
-                    {snackbarMessage}
-                </Alert>
-            </Snackbar>
         </Container>
     );
 }

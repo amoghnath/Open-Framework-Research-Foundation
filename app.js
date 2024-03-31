@@ -20,6 +20,7 @@ const { SolutionSwaggerSchema } = require("./models/Solution");
 const registrationRouter = require("./routes/user-registration-router");
 const loginRouter = require("./routes/user-auth-router");
 const problemRouter = require("./routes/problem-router");
+const solutionRouter = require("./routes/solution-router");
 
 // Express App Initialization
 const app = express();
@@ -81,6 +82,8 @@ async function assertDatabaseConnectionOk() {
 app.use("/api/auth", loginRouter);
 app.use("/api/register", registrationRouter);
 app.use("/api/problem", problemRouter);
+app.use("/api/solution", solutionRouter);
+
 app.get("/", (req, res) => res.send("Express server running on port 3000"));
 
 // Start Server
