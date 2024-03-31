@@ -27,10 +27,7 @@ import { useSnackbar } from '../context/SnackBarContext'
 const theme = createTheme()
 
 const validationSchema = yup.object({
-    uploaderEmail: yup
-        .string()
-        .email('Must be a valid email')
-        .required('Email is required'),
+    uploaderEmail: yup.string().email('Must be a valid email').required('Email is required'),
     uploaderPassword: yup
         .string()
         .min(8, 'Password must be at least 8 characters long')
@@ -45,9 +42,7 @@ const validationSchema = yup.object({
         .string()
         .email('Must be a valid email')
         .required('Business email is required'),
-    uploaderBusinessAddress: yup
-        .string()
-        .required('Business address is required'),
+    uploaderBusinessAddress: yup.string().required('Business address is required'),
 })
 
 export default function UploaderRegistrationForm() {
@@ -91,15 +86,7 @@ export default function UploaderRegistrationForm() {
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <Grid container component='main' sx={{ height: '100vh' }}>
-                <Grid
-                    item
-                    xs={false}
-                    sm={4}
-                    md={7}
-                    component={Paper}
-                    elevation={6}
-                    square
-                >
+                <Grid item xs={false} sm={4} md={7} component={Paper} elevation={6} square>
                     <Box
                         sx={{
                             my: 4,
@@ -120,8 +107,7 @@ export default function UploaderRegistrationForm() {
                                 Terms and Conditions
                             </Typography>
                             <Typography variant='body2' gutterBottom>
-                                By registering, you agree to the following
-                                terms:
+                                By registering, you agree to the following terms:
                             </Typography>
                             <List
                                 sx={{
@@ -205,9 +191,7 @@ export default function UploaderRegistrationForm() {
                                         label='Email Address'
                                         margin='normal'
                                         error={!!errors.uploaderEmail}
-                                        helperText={
-                                            errors.uploaderEmail?.message
-                                        }
+                                        helperText={errors.uploaderEmail?.message}
                                     />
                                 )}
                             />
@@ -224,9 +208,7 @@ export default function UploaderRegistrationForm() {
                                         type='password'
                                         margin='normal'
                                         error={!!errors.uploaderPassword}
-                                        helperText={
-                                            errors.uploaderPassword?.message
-                                        }
+                                        helperText={errors.uploaderPassword?.message}
                                     />
                                 )}
                             />
@@ -242,9 +224,7 @@ export default function UploaderRegistrationForm() {
                                         label='Full Name'
                                         margin='normal'
                                         error={!!errors.uploaderFullName}
-                                        helperText={
-                                            errors.uploaderFullName?.message
-                                        }
+                                        helperText={errors.uploaderFullName?.message}
                                     />
                                 )}
                             />
@@ -260,9 +240,7 @@ export default function UploaderRegistrationForm() {
                                         label='Phone Number'
                                         margin='normal'
                                         error={!!errors.uploaderPhoneNumber}
-                                        helperText={
-                                            errors.uploaderPhoneNumber?.message
-                                        }
+                                        helperText={errors.uploaderPhoneNumber?.message}
                                         InputProps={{
                                             startAdornment: (
                                                 <InputAdornment position='start'>
@@ -295,9 +273,7 @@ export default function UploaderRegistrationForm() {
                                         label='Business Name'
                                         margin='normal'
                                         error={!!errors.uploaderBusinessName}
-                                        helperText={
-                                            errors.uploaderBusinessName?.message
-                                        }
+                                        helperText={errors.uploaderBusinessName?.message}
                                     />
                                 )}
                             />
@@ -313,10 +289,7 @@ export default function UploaderRegistrationForm() {
                                         label='Business Email'
                                         margin='normal'
                                         error={!!errors.uploaderBusinessEmail}
-                                        helperText={
-                                            errors.uploaderBusinessEmail
-                                                ?.message
-                                        }
+                                        helperText={errors.uploaderBusinessEmail?.message}
                                     />
                                 )}
                             />
@@ -332,10 +305,7 @@ export default function UploaderRegistrationForm() {
                                         label='Business Address'
                                         margin='normal'
                                         error={!!errors.uploaderBusinessAddress}
-                                        helperText={
-                                            errors.uploaderBusinessAddress
-                                                ?.message
-                                        }
+                                        helperText={errors.uploaderBusinessAddress?.message}
                                     />
                                 )}
                             />

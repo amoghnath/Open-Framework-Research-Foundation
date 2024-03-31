@@ -27,10 +27,7 @@ import { useSnackbar } from '../context/SnackBarContext'
 const theme = createTheme()
 
 const validationSchema = yup.object({
-    solverEmail: yup
-        .string()
-        .email('Must be a valid email')
-        .required('Email is required'),
+    solverEmail: yup.string().email('Must be a valid email').required('Email is required'),
     solverPassword: yup
         .string()
         .min(8, 'Password must be at least 8 characters long')
@@ -45,9 +42,7 @@ const validationSchema = yup.object({
         .string()
         .email('Must be a valid email')
         .required('University email is required'),
-    solverUniversityAddress: yup
-        .string()
-        .required('University address is required'),
+    solverUniversityAddress: yup.string().required('University address is required'),
 })
 
 export default function SolverRegistrationForm() {
@@ -91,15 +86,7 @@ export default function SolverRegistrationForm() {
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <Grid container component='main' sx={{ height: '100vh' }}>
-                <Grid
-                    item
-                    xs={false}
-                    sm={4}
-                    md={7}
-                    component={Paper}
-                    elevation={6}
-                    square
-                >
+                <Grid item xs={false} sm={4} md={7} component={Paper} elevation={6} square>
                     <Box
                         sx={{
                             my: 4,
@@ -120,8 +107,7 @@ export default function SolverRegistrationForm() {
                                 Terms and Conditions
                             </Typography>
                             <Typography variant='body2' gutterBottom>
-                                By registering, you agree to the following
-                                terms:
+                                By registering, you agree to the following terms:
                             </Typography>
                             <List
                                 sx={{
@@ -226,9 +212,7 @@ export default function SolverRegistrationForm() {
                                         type='password'
                                         margin='normal'
                                         error={!!errors.solverPassword}
-                                        helperText={
-                                            errors.solverPassword?.message
-                                        }
+                                        helperText={errors.solverPassword?.message}
                                     />
                                 )}
                             />
@@ -244,9 +228,7 @@ export default function SolverRegistrationForm() {
                                         label='Full Name'
                                         margin='normal'
                                         error={!!errors.solverFullName}
-                                        helperText={
-                                            errors.solverFullName?.message
-                                        }
+                                        helperText={errors.solverFullName?.message}
                                     />
                                 )}
                             />
@@ -262,9 +244,7 @@ export default function SolverRegistrationForm() {
                                         label='Phone Number'
                                         margin='normal'
                                         error={!!errors.solverPhoneNumber}
-                                        helperText={
-                                            errors.solverPhoneNumber?.message
-                                        }
+                                        helperText={errors.solverPhoneNumber?.message}
                                         InputProps={{
                                             startAdornment: (
                                                 <InputAdornment position='start'>
@@ -297,9 +277,7 @@ export default function SolverRegistrationForm() {
                                         label='University Name'
                                         margin='normal'
                                         error={!!errors.solverUniversityName}
-                                        helperText={
-                                            errors.solverUniversityName?.message
-                                        }
+                                        helperText={errors.solverUniversityName?.message}
                                     />
                                 )}
                             />
@@ -315,10 +293,7 @@ export default function SolverRegistrationForm() {
                                         label='University Email'
                                         margin='normal'
                                         error={!!errors.solverUniversityEmail}
-                                        helperText={
-                                            errors.solverUniversityEmail
-                                                ?.message
-                                        }
+                                        helperText={errors.solverUniversityEmail?.message}
                                     />
                                 )}
                             />
@@ -334,10 +309,7 @@ export default function SolverRegistrationForm() {
                                         label='University Address'
                                         margin='normal'
                                         error={!!errors.solverUniversityAddress}
-                                        helperText={
-                                            errors.solverUniversityAddress
-                                                ?.message
-                                        }
+                                        helperText={errors.solverUniversityAddress?.message}
                                     />
                                 )}
                             />

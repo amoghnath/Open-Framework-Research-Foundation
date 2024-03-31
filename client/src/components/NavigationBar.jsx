@@ -17,13 +17,15 @@ import {
     DialogTitle,
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import PersonAddIcon from '@mui/icons-material/PersonAdd'
-import LoginIcon from '@mui/icons-material/Login'
-import CloudUploadIcon from '@mui/icons-material/CloudUpload'
-import SchoolIcon from '@mui/icons-material/School'
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import LogoutIcon from '@mui/icons-material/Logout'
-import FaceIcon from '@mui/icons-material/Face'
+import {
+    PersonAdd as PersonAddIcon,
+    Login as LoginIcon,
+    CloudUpload as CloudUploadIcon,
+    School as SchoolIcon,
+    AddCircleOutline as AddCircleOutlineIcon,
+    Logout as LogoutIcon,
+    Face as FaceIcon,
+} from '@mui/icons-material'
 import { useAuth } from '../context/AuthContext'
 
 export default function NavigationBar() {
@@ -33,86 +35,66 @@ export default function NavigationBar() {
     const navigate = useNavigate()
     const { isAuthenticated, currentUser, logout } = useAuth()
 
-    const handleRegisterClick = (event) => {
-        setAnchorEl(event.currentTarget)
+    const handleOpenMenu = (event, anchorSetter) => {
+        anchorSetter(event.currentTarget)
     }
 
-    const handleClose = () => {
-        setAnchorEl(null)
+    const handleCloseMenu = (anchorSetter) => {
+        anchorSetter(null)
     }
 
-    const handleProfileMenuClick = (event) => {
-        setProfileMenuAnchorEl(event.currentTarget)
-    }
-
-    const handleProfileMenuClose = () => {
-        setProfileMenuAnchorEl(null)
-    }
-
-    const handleNavigation = (path) => {
+    const handleNavigate = (path) => {
         navigate(path)
-        handleClose()
-        handleProfileMenuClose()
+        handleCloseMenu(setAnchorEl)
+        handleCloseMenu(setProfileMenuAnchorEl)
     }
 
-    const handleLogoutClick = () => {
-        setLogoutDialogOpen(true)
+    const toggleLogoutDialog = (open) => {
+        setLogoutDialogOpen(open)
     }
 
-    const handleLogoutConfirm = () => {
+    const performLogout = () => {
         logout()
-        handleNavigation('/')
-        setLogoutDialogOpen(false)
-    }
-
-    const handleLogoutCancel = () => {
-        setLogoutDialogOpen(false)
+        handleNavigate('/')
+        toggleLogoutDialog(false)
     }
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1, mb: 2 }}>
             <AppBar
                 position='static'
                 elevation={0}
-                sx={{
-                    backgroundColor: 'white',
-                    color: 'black',
-                    borderBottom: '2px solid #333',
-                }}
+                sx={{ backgroundColor: 'white', color: 'black', borderBottom: '2px solid #333' }}
             >
                 <Toolbar>
-                    <img
-                        src={`${process.env.PUBLIC_URL}/assets/logo.webp`}
-                        alt='Logo'
-                        style={{ height: 70 }}
-                    />
+                    <Box sx={{ cursor: 'pointer' }} onClick={() => handleNavigate('/')}>
+                        <img
+                            src={`${process.env.PUBLIC_URL}/assets/logo.webp`}
+                            alt='Logo'
+                            style={{ height: 70 }}
+                        />
+                    </Box>
                     <Typography
                         variant='h6'
                         component='div'
-                        sx={{ flexGrow: 1 }}
+                        sx={{ flexGrow: 1, cursor: 'pointer' }}
+                        onClick={() => handleNavigate('/')}
                     >
                         Open Research Framework Foundation
                     </Typography>
 
-                    {!isAuthenticated && (
+                    {!isAuthenticated ? (
                         <>
                             <Button
                                 variant='contained'
                                 sx={{
                                     margin: 1,
-                                    padding: '8px',
-                                    paddingLeft: '20px',
-                                    paddingRight: '20px',
                                     color: 'white',
                                     backgroundColor: 'black',
-                                    '&:hover': {
-                                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                                    },
+                                    '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.7)' },
                                 }}
-                                startIcon={
-                                    <PersonAddIcon style={{ color: 'white' }} />
-                                }
-                                onClick={handleRegisterClick}
+                                startIcon={<PersonAddIcon />}
+                                onClick={(e) => handleOpenMenu(e, setAnchorEl)}
                             >
                                 Register
                             </Button>
@@ -120,81 +102,54 @@ export default function NavigationBar() {
                                 id='register-menu'
                                 anchorEl={anchorEl}
                                 open={Boolean(anchorEl)}
-                                onClose={handleClose}
+                                onClose={() => handleCloseMenu(setAnchorEl)}
                             >
-                                <MenuItem
-                                    onClick={() =>
-                                        handleNavigation('/register/uploader')
-                                    }
-                                >
+                                <MenuItem onClick={() => handleNavigate('/register/uploader')}>
                                     <ListItemIcon>
                                         <CloudUploadIcon />
                                     </ListItemIcon>
-                                    <ListItemText>
-                                        Register as Problem Uploader
-                                    </ListItemText>
+                                    <ListItemText>Register as Problem Uploader</ListItemText>
                                 </MenuItem>
-                                <MenuItem
-                                    onClick={() =>
-                                        handleNavigation('/register/solver')
-                                    }
-                                >
+                                <MenuItem onClick={() => handleNavigate('/register/solver')}>
                                     <ListItemIcon>
                                         <SchoolIcon />
                                     </ListItemIcon>
-                                    <ListItemText>
-                                        Register as Problem Solver
-                                    </ListItemText>
+                                    <ListItemText>Register as Problem Solver</ListItemText>
                                 </MenuItem>
                             </Menu>
                             <Button
                                 variant='contained'
                                 sx={{
                                     margin: 1,
-                                    padding: '8px',
-                                    paddingLeft: '20px',
-                                    paddingRight: '20px',
                                     color: 'white',
                                     backgroundColor: 'black',
-                                    '&:hover': {
-                                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                                    },
+                                    '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.7)' },
                                 }}
-                                startIcon={
-                                    <LoginIcon style={{ color: 'white' }} />
-                                }
-                                onClick={() => handleNavigation('/login')}
+                                startIcon={<LoginIcon />}
+                                onClick={() => handleNavigate('/login')}
                             >
                                 Login
                             </Button>
                         </>
-                    )}
-
-                    {isAuthenticated && currentUser?.role === 'uploader' && (
-                        <Button
-                            variant='contained'
-                            sx={{
-                                margin: 1,
-                                padding: '8px',
-                                paddingLeft: '20px',
-                                paddingRight: '20px',
-                                color: 'white',
-                                backgroundColor: 'black',
-                                '&:hover': {
-                                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                                },
-                            }}
-                            startIcon={<AddCircleOutlineIcon />}
-                            onClick={() => handleNavigation('/create-problem')}
-                        >
-                            Upload Problem
-                        </Button>
-                    )}
-
-                    {isAuthenticated && (
+                    ) : (
                         <>
+                            {currentUser?.role === 'uploader' && (
+                                <Button
+                                    variant='contained'
+                                    sx={{
+                                        margin: 1,
+                                        color: 'white',
+                                        backgroundColor: 'black',
+                                        '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.7)' },
+                                    }}
+                                    startIcon={<AddCircleOutlineIcon />}
+                                    onClick={() => handleNavigate('/create-problem')}
+                                >
+                                    Upload Problem
+                                </Button>
+                            )}
                             <Avatar
-                                onClick={handleProfileMenuClick}
+                                onClick={(e) => handleOpenMenu(e, setProfileMenuAnchorEl)}
                                 sx={{
                                     cursor: 'pointer',
                                     marginLeft: '10px',
@@ -205,57 +160,45 @@ export default function NavigationBar() {
                             <Menu
                                 anchorEl={profileMenuAnchorEl}
                                 open={Boolean(profileMenuAnchorEl)}
-                                onClose={handleProfileMenuClose}
+                                onClose={() => handleCloseMenu(setProfileMenuAnchorEl)}
                             >
-                                <MenuItem
-                                    onClick={() =>
-                                        handleNavigation('/my-profile')
-                                    }
-                                >
+                                <MenuItem onClick={() => handleNavigate('/my-profile')}>
                                     <ListItemIcon>
                                         <FaceIcon />
                                     </ListItemIcon>
                                     <ListItemText>My Profile</ListItemText>
                                 </MenuItem>
-                                <MenuItem onClick={handleLogoutClick}>
+                                <MenuItem onClick={() => toggleLogoutDialog(true)}>
                                     <ListItemIcon sx={{ color: 'red' }}>
                                         <LogoutIcon />
                                     </ListItemIcon>
                                     <ListItemText>Logout</ListItemText>
                                 </MenuItem>
                             </Menu>
-
-                            <Dialog
-                                open={logoutDialogOpen}
-                                onClose={handleLogoutCancel}
-                                aria-labelledby='logout-dialog-title'
-                                aria-describedby='logout-dialog-description'
-                            >
-                                <DialogTitle id='logout-dialog-title'>
-                                    {'Confirm Logout'}
-                                </DialogTitle>
-                                <DialogContent>
-                                    <DialogContentText id='logout-dialog-description'>
-                                        Are you sure you want to logout?
-                                    </DialogContentText>
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button onClick={handleLogoutCancel}>
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        onClick={handleLogoutConfirm}
-                                        autoFocus
-                                        color='error'
-                                    >
-                                        Logout
-                                    </Button>
-                                </DialogActions>
-                            </Dialog>
                         </>
                     )}
                 </Toolbar>
             </AppBar>
+
+            <Dialog
+                open={logoutDialogOpen}
+                onClose={() => toggleLogoutDialog(false)}
+                aria-labelledby='logout-dialog-title'
+                aria-describedby='logout-dialog-description'
+            >
+                <DialogTitle id='logout-dialog-title'>{'Confirm Logout'}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id='logout-dialog-description'>
+                        Are you sure you want to logout?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => toggleLogoutDialog(false)}>Cancel</Button>
+                    <Button onClick={performLogout} autoFocus color='error'>
+                        Logout
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     )
 }

@@ -1,11 +1,6 @@
 import React, { Suspense } from 'react'
 import './App.css'
-import {
-    BrowserRouter as Router,
-    Routes,
-    Route,
-    Navigate,
-} from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import NavigationBar from './components/NavigationBar'
 import Login from './components/Login'
 import Footer from './components/Footer'
@@ -14,12 +9,8 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import { SnackbarProvider } from './context/SnackBarContext'
 import { CircularProgress, Box } from '@mui/material'
 
-const UploaderRegistrationForm = React.lazy(
-    () => import('./components/UploaderRegistration')
-)
-const SolverRegistrationForm = React.lazy(
-    () => import('./components/SolverRegistration')
-)
+const UploaderRegistrationForm = React.lazy(() => import('./components/UploaderRegistration'))
+const SolverRegistrationForm = React.lazy(() => import('./components/SolverRegistration'))
 const CreateProblemForm = React.lazy(() => import('./components/CreateProblem'))
 const ProblemDetails = React.lazy(() => import('./components/ProblemDetails'))
 function LoggedInAuthRoute({ children }) {

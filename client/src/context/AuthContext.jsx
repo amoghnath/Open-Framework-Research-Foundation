@@ -10,7 +10,7 @@ export function useAuth() {
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
-    const [loading, setLoading] = useState(true) // Add a loading state
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const verifyToken = async () => {
@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
             } catch (error) {
                 setIsAuthenticated(false)
             } finally {
-                setLoading(false) // Set loading to false after the check
+                setLoading(false)
             }
         }
 
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
                 throw new Error(result.message || 'An error occurred')
             }
 
-            setCurrentUser({ ...result.user, role }) // Include role in user data
+            setCurrentUser({ ...result.user, role })
             setIsAuthenticated(true)
         } catch (error) {
             throw error
@@ -81,12 +81,7 @@ export const AuthProvider = ({ children }) => {
 
     if (loading) {
         return (
-            <Box
-                display='flex'
-                justifyContent='center'
-                alignItems='center'
-                height='100vh'
-            >
+            <Box display='flex' justifyContent='center' alignItems='center' height='100vh'>
                 <CircularProgress color='inherit' />
             </Box>
         )

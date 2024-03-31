@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import {
     Typography,
     Box,
@@ -9,6 +9,8 @@ import {
     Avatar,
     Stack,
     Chip,
+    Button,
+    useTheme,
 } from '@mui/material'
 import EmailIcon from '@mui/icons-material/Email'
 import BusinessIcon from '@mui/icons-material/Business'
@@ -20,15 +22,74 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import FacebookIcon from '@mui/icons-material/Facebook'
 import TwitterIcon from '@mui/icons-material/Twitter'
 import LinkedInIcon from '@mui/icons-material/LinkedIn'
+import SendIcon from '@mui/icons-material/Send'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import LoginIcon from '@mui/icons-material/Login'
+import { useAuth } from '../context/AuthContext'
+
+function ShareButton({ Icon, url, text, color }) {
+    const theme = useTheme()
+    const handleClick = () => window.open(url, '_blank')
+
+    return (
+        <Button
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: color,
+                color: 'white',
+                padding: theme.spacing(1),
+                marginRight: theme.spacing(1),
+                textTransform: 'none',
+                '&:hover': {
+                    backgroundColor: color,
+                    color: 'white',
+                },
+            }}
+            onClick={handleClick}
+            startIcon={<Icon sx={{ fontSize: 24 }} />}
+        >
+            <Typography variant='body2'>{text}</Typography>
+        </Button>
+    )
+}
+
+function ChipDetail({ icon, label }) {
+    const theme = useTheme()
+    return <Chip icon={icon} label={label} variant='outlined' sx={{ mr: theme.spacing(1) }} />
+}
+
+function UserDetail({ title, Icon, detail, email = false }) {
+    return (
+        <Stack direction='column' alignItems='center' spacing={1}>
+            <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
+                {title}
+            </Typography>
+            <Avatar sx={{ bgcolor: 'primary.main' }}>
+                <Icon />
+            </Avatar>
+            <Typography variant='body2'>
+                {email ? <a href={`mailto:${detail}`}>{detail}</a> : detail}
+            </Typography>
+        </Stack>
+    )
+}
 
 function ProblemDetails() {
+    const theme = useTheme()
     const [problem, setProblem] = useState(null)
     const { problemId } = useParams()
+    const navigate = useNavigate()
+    const { isAuthenticated, currentUser } = useAuth()
 
     useEffect(() => {
-        const fetchProblemDetails = async () => {
+        async function fetchProblemDetails() {
             try {
                 const response = await fetch(`/api/problem/${problemId}`)
+                if (!response.ok) {
+                    throw new Error('Error fetching problem details')
+                }
                 const data = await response.json()
                 setProblem(data)
             } catch (error) {
@@ -40,6 +101,10 @@ function ProblemDetails() {
             fetchProblemDetails()
         }
     }, [problemId])
+
+    const handleSolutionSubmission = () => navigate(`/submit-solution/${problemId}`)
+    const handleRegistrationNavigation = () => navigate('/register/solver')
+    const handleLoginNavigation = () => navigate('/login')
 
     if (!problem) {
         return (
@@ -56,248 +121,164 @@ function ProblemDetails() {
         )
     }
 
-    const { Uploader: uploader } = problem
-
-    const shareOnFacebook = () => {
-        const url =
-            'https://www.facebook.com/sharer/sharer.php?u=' +
-            encodeURIComponent(window.location.href)
-        window.open(url, '_blank')
-    }
-
-    const shareOnTwitter = () => {
-        const url =
-            'https://twitter.com/intent/tweet?url=' +
-            encodeURIComponent(window.location.href)
-        window.open(url, '_blank')
-    }
-
-    const shareOnLinkedIn = () => {
-        const url =
-            'https://www.linkedin.com/sharing/share-offsite/?url=' +
-            encodeURIComponent(window.location.href)
-        window.open(url, '_blank')
-    }
-
     return (
-        <Box sx={{ mx: 2 }}>
-            <Paper elevation={3} sx={{ p: 2, mt: 2 }}>
+        <Box sx={{ mx: theme.spacing(1) }}>
+            <Paper elevation={3} sx={{ p: theme.spacing(2), mt: theme.spacing(2) }}>
                 <Typography variant='h4' gutterBottom>
                     {problem.problemTitle}
                 </Typography>
-                <Divider sx={{ my: 1 }} />
                 <Box
                     sx={{
-                        mt: 2,
+                        mt: theme.spacing(1),
                         display: 'flex',
                         justifyContent: 'flex-start',
                         alignItems: 'center',
                     }}
                 >
-                    <FacebookIcon
-                        sx={{
-                            fontSize: 32,
-                            color: '#1877F2',
-                            mr: 1,
-                            cursor: 'pointer',
-                        }}
-                        onClick={shareOnFacebook}
+                    <ShareButton
+                        Icon={FacebookIcon}
+                        url='https://www.facebook.com/sharer/sharer.php?u='
+                        text='Share on Facebook'
+                        color='#1877F2'
                     />
-                    <Typography
-                        variant='body2'
-                        sx={{ mr: 1, cursor: 'pointer' }}
-                        onClick={shareOnFacebook}
-                    >
-                        Share on Facebook
-                    </Typography>
-                    <TwitterIcon
-                        sx={{
-                            fontSize: 32,
-                            color: '#1DA1F2',
-                            mr: 1,
-                            cursor: 'pointer',
-                        }}
-                        onClick={shareOnTwitter}
+                    <ShareButton
+                        Icon={TwitterIcon}
+                        url='https://twitter.com/intent/tweet?url='
+                        text='Share on Twitter'
+                        color='#1DA1F2'
                     />
-                    <Typography
-                        variant='body2'
-                        sx={{ mr: 1, cursor: 'pointer' }}
-                        onClick={shareOnTwitter}
-                    >
-                        Share on Twitter
-                    </Typography>
-                    <LinkedInIcon
-                        sx={{
-                            fontSize: 32,
-                            color: '#0077B5',
-                            cursor: 'pointer',
-                        }}
-                        onClick={shareOnLinkedIn}
+                    <ShareButton
+                        Icon={LinkedInIcon}
+                        url='https://www.linkedin.com/sharing/share-offsite/?url='
+                        text='Share on LinkedIn'
+                        color='#0077B5'
                     />
-                    <Typography
-                        variant='body2'
-                        sx={{ cursor: 'pointer' }}
-                        onClick={shareOnLinkedIn}
-                    >
-                        Share on LinkedIn
-                    </Typography>
                 </Box>
-                <br />
-                <Chip
-                    icon={<MonetizationOnIcon />}
-                    label={`₹${new Intl.NumberFormat('en-IN').format(problem.problemReward)}`}
-                    variant='outlined'
-                    sx={{ mr: 1 }} // Add right margin
-                />
-                <Chip
-                    icon={<EventIcon />}
-                    label={new Date(
-                        problem.problemDeadlineDate
-                    ).toLocaleDateString()}
-                    variant='outlined'
-                    sx={{ mr: 1 }} // Add right margin
-                />
-                <Chip
-                    icon={<AccessTimeIcon />}
-                    label={`Created: ${new Date(problem.createdAt).toLocaleString()}`}
-                    variant='outlined'
-                    sx={{ mr: 1 }} // Add right margin
-                />
-                <Chip
-                    icon={<AccessTimeIcon />}
-                    label={`Updated: ${new Date(problem.updatedAt).toLocaleString()}`}
-                    variant='outlined'
-                    sx={{ mr: 1 }} // Add right margin
-                />
-                <Divider sx={{ my: 1 }} />
+                <Divider sx={{ my: theme.spacing(1) }} />
+                <Box sx={{ mt: theme.spacing(3) }}>
+                    {problem.Uploader && (
+                        <Grid
+                            container
+                            alignItems='center'
+                            justifyContent='space-around'
+                            spacing={2}
+                        >
+                            <UserDetail
+                                title='Representative Name'
+                                Icon={PersonIcon}
+                                detail={problem.Uploader.uploaderFullName}
+                            />
+                            <UserDetail
+                                title='Representative Email'
+                                Icon={EmailIcon}
+                                detail={problem.Uploader.uploaderEmail}
+                                email
+                            />
+                            <UserDetail
+                                title='Business Name'
+                                Icon={BusinessIcon}
+                                detail={problem.Uploader.uploaderBusinessName}
+                            />
+                            <UserDetail
+                                title='Business Email'
+                                Icon={EmailIcon}
+                                detail={problem.Uploader.uploaderBusinessEmail}
+                                email
+                            />
+                            <UserDetail
+                                title='Business Address'
+                                Icon={LocationOnIcon}
+                                detail={problem.Uploader.uploaderBusinessAddress}
+                            />
+                        </Grid>
+                    )}
+                </Box>
+                <Divider sx={{ my: theme.spacing(2) }} />
+                <Box
+                    sx={{
+                        mt: theme.spacing(2),
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: theme.spacing(1),
+                    }}
+                >
+                    <ChipDetail
+                        icon={<MonetizationOnIcon />}
+                        label={`₹${new Intl.NumberFormat('en-IN').format(problem.problemReward)}`}
+                    />
+                    <ChipDetail
+                        icon={<EventIcon />}
+                        label={new Date(problem.problemDeadlineDate).toLocaleDateString()}
+                    />
+                    <ChipDetail
+                        icon={<AccessTimeIcon />}
+                        label={`Created: ${new Date(problem.createdAt).toLocaleString()}`}
+                    />
+                    <ChipDetail
+                        icon={<AccessTimeIcon />}
+                        label={`Updated: ${new Date(problem.updatedAt).toLocaleString()}`}
+                    />
+                </Box>
+                {isAuthenticated && currentUser?.role === 'solver' && (
+                    <Button
+                        variant='contained'
+                        onClick={handleSolutionSubmission}
+                        startIcon={<SendIcon />}
+                        sx={{
+                            mt: theme.spacing(2),
+                            backgroundColor: '#000',
+                            color: '#fff',
+                            '&:hover': {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            },
+                        }}
+                    >
+                        Submit Solution
+                    </Button>
+                )}
+                {!isAuthenticated && (
+                    <>
+                        <Button
+                            variant='contained'
+                            onClick={handleRegistrationNavigation}
+                            startIcon={<PersonAddIcon />}
+                            sx={{
+                                mt: theme.spacing(2),
+                                backgroundColor: '#000',
+                                color: '#fff',
+                                '&:hover': {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                },
+                                mr: 1,
+                            }}
+                        >
+                            Register To Upload Solution
+                        </Button>
+                        <Button
+                            variant='contained'
+                            onClick={handleLoginNavigation}
+                            startIcon={<LoginIcon />}
+                            sx={{
+                                mt: theme.spacing(2),
+                                backgroundColor: '#000',
+                                color: '#fff',
+                                '&:hover': {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                },
+                            }}
+                        >
+                            Login To Upload Solution
+                        </Button>
+                    </>
+                )}
+                <Divider sx={{ my: theme.spacing(2) }} />
                 <Typography
                     variant='body1'
-                    sx={{ mb: 2 }}
                     dangerouslySetInnerHTML={{
                         __html: problem.problemDescription,
                     }}
                 />
             </Paper>
-
-            {uploader && (
-                <Paper elevation={3} sx={{ p: 2, mt: 2, mb: 2 }}>
-                    <Grid
-                        container
-                        alignItems='center'
-                        justifyContent='space-around'
-                        spacing={2}
-                    >
-                        <Grid item>
-                            <Stack
-                                direction='column'
-                                alignItems='center'
-                                spacing={1}
-                            >
-                                <Typography
-                                    variant='body2'
-                                    sx={{ fontWeight: 'bold' }}
-                                >
-                                    Representative Name
-                                </Typography>
-                                <Avatar sx={{ bgcolor: 'primary.main' }}>
-                                    <PersonIcon />
-                                </Avatar>
-                                <Typography variant='body2'>
-                                    {uploader.uploaderFullName}
-                                </Typography>
-                            </Stack>
-                        </Grid>
-                        <Grid item>
-                            <Stack
-                                direction='column'
-                                alignItems='center'
-                                spacing={1}
-                            >
-                                <Typography
-                                    variant='body2'
-                                    sx={{ fontWeight: 'bold' }}
-                                >
-                                    Representative Email
-                                </Typography>
-                                <Avatar sx={{ bgcolor: 'primary.main' }}>
-                                    <EmailIcon />
-                                </Avatar>
-                                <Typography variant='body2'>
-                                    <a
-                                        href={`mailto:${uploader.uploaderEmail}`}
-                                    >
-                                        {uploader.uploaderEmail}
-                                    </a>
-                                </Typography>
-                            </Stack>
-                        </Grid>
-                        <Grid item>
-                            <Stack
-                                direction='column'
-                                alignItems='center'
-                                spacing={1}
-                            >
-                                <Typography
-                                    variant='body2'
-                                    sx={{ fontWeight: 'bold' }}
-                                >
-                                    Business Name
-                                </Typography>
-                                <Avatar sx={{ bgcolor: 'primary.main' }}>
-                                    <BusinessIcon />
-                                </Avatar>
-                                <Typography variant='body2'>
-                                    {uploader.uploaderBusinessName}
-                                </Typography>
-                            </Stack>
-                        </Grid>
-                        <Grid item>
-                            <Stack
-                                direction='column'
-                                alignItems='center'
-                                spacing={1}
-                            >
-                                <Typography
-                                    variant='body2'
-                                    sx={{ fontWeight: 'bold' }}
-                                >
-                                    Business Email
-                                </Typography>
-                                <Avatar sx={{ bgcolor: 'primary.main' }}>
-                                    <EmailIcon />
-                                </Avatar>
-                                <Typography variant='body2'>
-                                    <a
-                                        href={`mailto:${uploader.uploaderBusinessEmail}`}
-                                    >
-                                        {uploader.uploaderBusinessEmail}
-                                    </a>
-                                </Typography>
-                            </Stack>
-                        </Grid>
-                        <Grid item>
-                            <Stack
-                                direction='column'
-                                alignItems='center'
-                                spacing={1}
-                            >
-                                <Typography
-                                    variant='body2'
-                                    sx={{ fontWeight: 'bold' }}
-                                >
-                                    Business Address
-                                </Typography>
-                                <Avatar sx={{ bgcolor: 'primary.main' }}>
-                                    <LocationOnIcon />
-                                </Avatar>
-                                <Typography variant='body2'>
-                                    {uploader.uploaderBusinessAddress}
-                                </Typography>
-                            </Stack>
-                        </Grid>
-                    </Grid>
-                </Paper>
-            )}
         </Box>
     )
 }

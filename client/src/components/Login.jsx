@@ -21,10 +21,7 @@ import { useAuth } from '../context/AuthContext'
 import { Navigate } from 'react-router-dom'
 
 const validationSchema = yup.object({
-    email: yup
-        .string()
-        .email('Enter a valid email')
-        .required('Email is required'),
+    email: yup.string().email('Enter a valid email').required('Email is required'),
     password: yup.string().required('Password is required'),
 })
 
@@ -76,12 +73,7 @@ export default function Login() {
                 <Typography component='h1' variant='h5'>
                     Sign in
                 </Typography>
-                <Box
-                    component='form'
-                    noValidate
-                    onSubmit={handleSubmit(onSubmit)}
-                    sx={{ mt: 1 }}
-                >
+                <Box component='form' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
                     <TextField
                         {...register('email')}
                         margin='normal'
@@ -120,17 +112,11 @@ export default function Login() {
                             },
                         }}
                     >
-                        <ToggleButton
-                            value='uploader'
-                            sx={{ flexGrow: 1, borderColor: 'black' }}
-                        >
+                        <ToggleButton value='uploader' sx={{ flexGrow: 1, borderColor: 'black' }}>
                             <CloudUploadIcon sx={{ mr: 1 }} />
                             Uploader
                         </ToggleButton>
-                        <ToggleButton
-                            value='solver'
-                            sx={{ flexGrow: 1, borderColor: 'black' }}
-                        >
+                        <ToggleButton value='solver' sx={{ flexGrow: 1, borderColor: 'black' }}>
                             <SchoolIcon sx={{ mr: 1 }} />
                             Solver
                         </ToggleButton>
@@ -154,11 +140,7 @@ export default function Login() {
                     </Button>
                 </Box>
             </Box>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={6000}
-                onClose={handleSnackbarClose}
-            >
+            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
                 <Alert
                     onClose={handleSnackbarClose}
                     severity='error'

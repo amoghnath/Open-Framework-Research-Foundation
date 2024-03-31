@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import {
     Card,
     CardContent,
@@ -8,53 +8,46 @@ import {
     CardActions,
     Button,
     Chip,
-} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import EventIcon from '@mui/icons-material/Event';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import VisibilityIcon from '@mui/icons-material/Visibility'; // Import appropriate icon
-import NewIcon from '@mui/icons-material/NewReleases'; // Import New icon
+} from '@mui/material'
+import { useNavigate } from 'react-router-dom'
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
+import EventIcon from '@mui/icons-material/Event'
+import AccessTimeIcon from '@mui/icons-material/AccessTime'
+import VisibilityIcon from '@mui/icons-material/Visibility' // Import appropriate icon
+import NewIcon from '@mui/icons-material/NewReleases' // Import New icon
 
 function Home() {
-    const [problems, setProblems] = useState([]);
-    const navigate = useNavigate(); // Initialize the useNavigate hook
+    const [problems, setProblems] = useState([])
+    const navigate = useNavigate() // Initialize the useNavigate hook
 
     useEffect(() => {
         const fetchProblems = async () => {
             try {
-                const response = await fetch('/api/problem/');
-                const data = await response.json();
-                setProblems(data);
+                const response = await fetch('/api/problem/')
+                const data = await response.json()
+                setProblems(data)
             } catch (error) {
-                console.error('Error fetching problems:', error);
+                console.error('Error fetching problems:', error)
             }
-        };
+        }
 
-        fetchProblems();
-    }, []);
+        fetchProblems()
+    }, [])
 
     const handleViewDetails = (problemId) => {
-        navigate(`/problems/${problemId}`); // Redirects the user to the /problemId route
-    };
+        navigate(`/problems/${problemId}`) // Redirects the user to the /problemId route
+    }
 
     const isNewProblem = (createdAt) => {
-        const createdDate = new Date(createdAt);
-        const currentDate = new Date();
-        const differenceInDays = Math.floor(
-            (currentDate - createdDate) / (1000 * 3600 * 24)
-        );
-        return differenceInDays <= 10;
-    };
+        const createdDate = new Date(createdAt)
+        const currentDate = new Date()
+        const differenceInDays = Math.floor((currentDate - createdDate) / (1000 * 3600 * 24))
+        return differenceInDays <= 10
+    }
 
     return (
         <>
-            <Grid
-                container
-                spacing={4}
-                padding={2}
-                style={{ marginTop: 5, paddingTop: 0 }}
-            >
+            <Grid container spacing={4} padding={2} style={{ marginTop: 5, paddingTop: 0 }}>
                 {problems.map((problem) => (
                     <Grid item xs={12} sm={6} md={4} key={problem.problemId}>
                         <Card>
@@ -65,19 +58,15 @@ function Home() {
                                 image={`/assets/card.jpg`}
                             />
                             <CardContent>
-                                <Typography
-                                    gutterBottom
-                                    variant='h5'
-                                    component='div'
-                                >
+                                <Typography gutterBottom variant='h5' component='div'>
                                     {problem.problemTitle}
                                 </Typography>
                                 {isNewProblem(problem.createdAt) && (
                                     <Chip
                                         icon={<NewIcon />}
-                                        label="New"
-                                        color="secondary"
-                                        variant="outlined"
+                                        label='New'
+                                        color='secondary'
+                                        variant='outlined'
                                         sx={{ marginTop: '8px' }}
                                     />
                                 )}
@@ -138,9 +127,7 @@ function Home() {
                                         },
                                         padding: '10px',
                                     }}
-                                    onClick={() =>
-                                        handleViewDetails(problem.problemId)
-                                    }
+                                    onClick={() => handleViewDetails(problem.problemId)}
                                     startIcon={<VisibilityIcon />} // Include appropriate icon
                                 >
                                     View Details
@@ -151,7 +138,7 @@ function Home() {
                 ))}
             </Grid>
         </>
-    );
+    )
 }
 
-export default Home;
+export default Home

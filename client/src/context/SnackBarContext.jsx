@@ -22,22 +22,18 @@ export const SnackbarProvider = ({ children }) => {
     return (
         <SnackbarContext.Provider value={{ openSnackbar, closeSnackbar }}>
             {children}
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={8000}
-                onClose={closeSnackbar}
-            >
+            <Snackbar open={snackbarOpen} autoHideDuration={8000} onClose={closeSnackbar}>
                 <MuiAlert
                     onClose={closeSnackbar}
                     variant='filled'
                     severity='info'
                     sx={{
                         width: '100%',
-                        backgroundColor: 'white', // Set background color to white
-                        color: 'black', // Set text color to black
-                        border: '1px solid black', // Set border to black
-                        fontSize: '1.1rem', // Increase font size
-                        padding: '16px', // Increase padding
+                        backgroundColor: 'white',
+                        color: 'black',
+                        border: '1px solid black',
+                        fontSize: '1.1rem',
+                        padding: '16px',
                     }}
                 >
                     {snackbarMessage}
