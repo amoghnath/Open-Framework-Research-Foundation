@@ -1,5 +1,6 @@
 const { Problem } = require("../../models/Problem");
 const { Uploader } = require("../../models/Uploader");
+const { Solution } = require("../../models/Solution");
 const jwt = require("jsonwebtoken");
 
 const problemController = {
@@ -75,8 +76,43 @@ const problemController = {
         } catch (error) {
             res.status(500).json({ message: "Error fetching problem", error: error.message });
         }
-    }
+    },
 
+    async readAllByUploader(req, res) {
+        try {
+            // Extract the JWT from the cookie
+            const token = req.cookies['user-session-token'];
+            if (!token) {
+                return res.status(401).json({ message: "No token provided" });
+            }
+
+            // Decode the JWT to get the uploaderId
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const uploaderId = decoded.uploaderId;
+
+            if (!uploaderId) {
+                return res.status(400).json({ message: "Unable to identify uploader from token" });
+            }
+
+            // Fetch problems uploaded by this uploader and include associated solutions
+            const problems = await Problem.findAll({
+                where: { uploaderId },
+                include: [{
+                    model: Solution,
+                    required: false // This includes solutions if they exist, but doesn't require them for the problem to be included
+                }]
+            });
+
+            if (!problems.length) {
+                return res.status(404).json({ message: "No problems found for this uploader" });
+            }
+
+            res.status(200).json(problems);
+        } catch (error) {
+            console.error('Error fetching problems and solutions:', error);
+            res.status(500).json({ message: "Error fetching problems and solutions", error: error.message });
+        }
+    }
 };
 
 module.exports = problemController;

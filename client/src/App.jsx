@@ -3,7 +3,6 @@ import './App.css'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import NavigationBar from './components/NavigationBar'
 import Login from './components/Login'
-import Footer from './components/Footer'
 import Home from './components/Home'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { SnackbarProvider } from './context/SnackBarContext'
@@ -14,7 +13,7 @@ const SolverRegistrationForm = React.lazy(() => import('./components/SolverRegis
 const CreateProblemForm = React.lazy(() => import('./components/CreateProblem'))
 const ProblemDetails = React.lazy(() => import('./components/ProblemDetails'))
 const SolutionForm = React.lazy(() => import('./components/CreateSolution'));
-const Profile = React.lazy(() => import('./components/Profile'));
+const SolverProfile = React.lazy(() => import('./components/SolverProfile'));
 
 function LoggedInAuthRoute({ children }) {
   const { isAuthenticated } = useAuth()
@@ -49,90 +48,80 @@ function PrivateRoute({ children }) {
 function App() {
   return (
     <AuthProvider>
-      <div
-        className='App'
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          minHeight: '100vh',
-        }}
-      >
-        <SnackbarProvider>
-          <Router>
-            <NavigationBar />
-            <main style={{ flexGrow: 1 }}>
-              <Suspense
-                fallback={
-                  <Box
-                    display='flex'
-                    justifyContent='center'
-                    alignItems='center'
-                    height='100vh'
-                  >
-                    <CircularProgress />
-                  </Box>
-                }
-              >
-                <Routes>
-                  <Route path='/' element={<Home />} />
-                  <Route
-                    path='/login'
-                    element={
-                      <LoggedInAuthRoute>
-                        <Login />
-                      </LoggedInAuthRoute>
-                    }
-                  />
-                  <Route
-                    path='/register/uploader'
-                    element={
-                      <LoggedInAuthRoute>
-                        <UploaderRegistrationForm />
-                      </LoggedInAuthRoute>
-                    }
-                  />
-                  <Route
-                    path='/register/solver'
-                    element={
-                      <LoggedInAuthRoute>
-                        <SolverRegistrationForm />
-                      </LoggedInAuthRoute>
-                    }
-                  />
-                  <Route
-                    path='/create-problem'
-                    element={
-                      <UploaderPrivateRoute>
-                        <CreateProblemForm />
-                      </UploaderPrivateRoute>
-                    }
-                  />
-                  <Route path='/submit-solution/:problemId' element={
-                    <PrivateRoute>
-                      <SolutionForm />
-                    </PrivateRoute>
+      <SnackbarProvider>
+        <Router>
+          <NavigationBar />
+          <main style={{ flexGrow: 1 }}>
+            <Suspense
+              fallback={
+                <Box
+                  display='flex'
+                  justifyContent='center'
+                  alignItems='center'
+                  height='100vh'
+                >
+                  <CircularProgress />
+                </Box>
+              }
+            >
+              <Routes>
+                <Route path='/' element={<Home />} />
+                <Route
+                  path='/login'
+                  element={
+                    <LoggedInAuthRoute>
+                      <Login />
+                    </LoggedInAuthRoute>
                   }
-                  />
-                  <Route
-                    path='/problems/:problemId'
-                    element={<ProblemDetails />}
-                  />
-                  <Route
-                    path='/profile'
-                    element={
-                      <PrivateRoute>
-                        <Profile />
-                      </PrivateRoute>
-                    }
-                  />
-                </Routes>
-              </Suspense>
-            </main>
-            <Footer />
-          </Router>
-        </SnackbarProvider>
-      </div>
-    </AuthProvider>
+                />
+                <Route
+                  path='/register/uploader'
+                  element={
+                    <LoggedInAuthRoute>
+                      <UploaderRegistrationForm />
+                    </LoggedInAuthRoute>
+                  }
+                />
+                <Route
+                  path='/register/solver'
+                  element={
+                    <LoggedInAuthRoute>
+                      <SolverRegistrationForm />
+                    </LoggedInAuthRoute>
+                  }
+                />
+                <Route
+                  path='/create-problem'
+                  element={
+                    <UploaderPrivateRoute>
+                      <CreateProblemForm />
+                    </UploaderPrivateRoute>
+                  }
+                />
+                <Route path='/submit-solution/:problemId' element={
+                  <SolverPrivateRoute>
+                    <SolutionForm />
+                  </SolverPrivateRoute>
+                }
+                />
+                <Route
+                  path='/problems/:problemId'
+                  element={<ProblemDetails />}
+                />
+                <Route
+                  path='/profile/solver'
+                  element={
+                    <SolverPrivateRoute>
+                      <SolverProfile />
+                    </SolverPrivateRoute>
+                  }
+                />
+              </Routes>
+            </Suspense>
+          </main>
+        </Router>
+      </SnackbarProvider>
+    </AuthProvider >
   )
 }
 

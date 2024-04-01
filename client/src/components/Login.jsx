@@ -61,7 +61,6 @@ function UserForm({ onSubmit, register, errors, role, setRole }) {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                mt: -20,
             }}
         >
             <Avatar

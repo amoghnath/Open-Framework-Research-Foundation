@@ -123,7 +123,7 @@ function ProblemDetails() {
 
     return (
         <Box sx={{ mx: theme.spacing(1) }}>
-            <Paper elevation={3} sx={{ p: theme.spacing(2), mt: theme.spacing(2) }}>
+            <Paper elevation={0} sx={{ p: theme.spacing(2), mt: theme.spacing(2) }}>
                 <Typography variant='h4' gutterBottom>
                     {problem.problemTitle}
                 </Typography>

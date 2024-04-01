@@ -162,11 +162,11 @@ export default function NavigationBar() {
                                 open={Boolean(profileMenuAnchorEl)}
                                 onClose={() => handleCloseMenu(setProfileMenuAnchorEl)}
                             >
-                                <MenuItem onClick={() => handleNavigate('/profile')}>
+                                <MenuItem onClick={() => handleNavigate(currentUser?.role === 'uploader' ? '/profile/uploader' : '/profile/solver')}>
                                     <ListItemIcon>
                                         <FaceIcon />
                                     </ListItemIcon>
-                                    <ListItemText>My Profile</ListItemText>
+                                    <ListItemText>{currentUser?.role === 'uploader' ? 'Uploader Profile' : 'Solver Profile'}</ListItemText>
                                 </MenuItem>
                                 <MenuItem onClick={() => toggleLogoutDialog(true)}>
                                     <ListItemIcon sx={{ color: 'red' }}>

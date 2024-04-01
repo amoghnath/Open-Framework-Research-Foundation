@@ -77,4 +77,6 @@ router.get("/:problemId", problemController.read);
  */
 router.post("/", authenticateToken, requireRole("uploader"), problemController.create);
 
+router.get("/uploader-profile", authenticateToken, problemController.readAllByUploader);
+
 module.exports = router;

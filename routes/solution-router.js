@@ -26,7 +26,7 @@ const router = express.Router();
  *       401:
  *         description: Unauthorized access
  */
-router.get("/", authenticateToken, solutionController.readAllBySolver);
+router.get("/solver-profile", authenticateToken, solutionController.readAllBySolver);
 
 /**
  * @swagger
