@@ -4,6 +4,8 @@ const problemController = require("../controllers/problems/problem-controller");
 
 const router = express.Router();
 
+router.get("/uploader-profile", authenticateToken, problemController.readAllByUploader);
+
 /**
  * @swagger
  * /problem:
@@ -76,7 +78,5 @@ router.get("/:problemId", problemController.read);
  *         description: Forbidden action, role not allowed.
  */
 router.post("/", authenticateToken, requireRole("uploader"), problemController.create);
-
-router.get("/uploader-profile", authenticateToken, problemController.readAllByUploader);
 
 module.exports = router;

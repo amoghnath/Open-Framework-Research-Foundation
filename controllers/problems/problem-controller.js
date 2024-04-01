@@ -1,6 +1,8 @@
 const { Problem } = require("../../models/Problem");
 const { Uploader } = require("../../models/Uploader");
 const { Solution } = require("../../models/Solution");
+const { Solver } = require("../../models/Solver");
+
 const jwt = require("jsonwebtoken");
 
 const problemController = {
@@ -79,31 +81,45 @@ const problemController = {
     },
 
     async readAllByUploader(req, res) {
+        console.log("readAllByUploader called");
+
         try {
-            // Extract the JWT from the cookie
             const token = req.cookies['user-session-token'];
+            console.log("Token from cookie:", token);
+
             if (!token) {
+                console.log("No token provided");
                 return res.status(401).json({ message: "No token provided" });
             }
 
-            // Decode the JWT to get the uploaderId
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            console.log("Decoded JWT:", decoded);
+
             const uploaderId = decoded.uploaderId;
+            console.log("Uploader ID from JWT:", uploaderId);
 
             if (!uploaderId) {
+                console.log("Unable to identify uploader from token");
                 return res.status(400).json({ message: "Unable to identify uploader from token" });
             }
 
-            // Fetch problems uploaded by this uploader and include associated solutions
+            // Fetch problems uploaded by this uploader and include associated solutions along with solver details
             const problems = await Problem.findAll({
                 where: { uploaderId },
                 include: [{
                     model: Solution,
-                    required: false // This includes solutions if they exist, but doesn't require them for the problem to be included
+                    required: false, // Include solutions even if they don't exist
+                    include: [{
+                        model: Solver, // Include the Solver model to get details of the solver
+                        attributes: { exclude: ['solverPassword'] } // Exclude sensitive information like password
+                    }]
                 }]
             });
 
+            console.log(`Number of problems found for uploader ${uploaderId}:`, problems.length);
+
             if (!problems.length) {
+                console.log("No problems found for this uploader");
                 return res.status(404).json({ message: "No problems found for this uploader" });
             }
 
@@ -113,6 +129,8 @@ const problemController = {
             res.status(500).json({ message: "Error fetching problems and solutions", error: error.message });
         }
     }
+
+
 };
 
 module.exports = problemController;

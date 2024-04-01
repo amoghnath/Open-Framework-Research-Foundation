@@ -14,6 +14,7 @@ const CreateProblemForm = React.lazy(() => import('./components/CreateProblem'))
 const ProblemDetails = React.lazy(() => import('./components/ProblemDetails'))
 const SolutionForm = React.lazy(() => import('./components/CreateSolution'));
 const SolverProfile = React.lazy(() => import('./components/SolverProfile'));
+const UploaderProfile = React.lazy(() => import('./components/UploaderProfile'));
 
 function LoggedInAuthRoute({ children }) {
   const { isAuthenticated } = useAuth()
@@ -114,6 +115,14 @@ function App() {
                     <SolverPrivateRoute>
                       <SolverProfile />
                     </SolverPrivateRoute>
+                  }
+                />
+                <Route
+                  path='/profile/uploader'
+                  element={
+                    <UploaderPrivateRoute>
+                      <UploaderProfile />
+                    </UploaderPrivateRoute>
                   }
                 />
               </Routes>
