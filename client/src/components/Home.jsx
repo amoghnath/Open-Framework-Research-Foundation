@@ -9,8 +9,6 @@ import {
     Chip,
     useTheme,
     Paper,
-    Box,
-    IconButton,
     Stack,
     CardActions // Import CardActions
 } from '@mui/material';
@@ -54,12 +52,12 @@ function Home() {
         return differenceInDays <= 10;
     };
 
-    const sortProblemsByReward = () => {
-        setProblems([...problems].sort((a, b) => b.problemReward - a.problemReward));
+    const sortProblemsByReward = (ascending = true) => {
+        setProblems([...problems].sort((a, b) => ascending ? a.problemReward - b.problemReward : b.problemReward - a.problemReward));
     };
 
-    const sortProblemsByDeadline = () => {
-        setProblems([...problems].sort((a, b) => new Date(a.problemDeadlineDate) - new Date(b.problemDeadlineDate)));
+    const sortProblemsByDeadline = (nearest = true) => {
+        setProblems([...problems].sort((a, b) => nearest ? new Date(a.problemDeadlineDate) - new Date(b.problemDeadlineDate) : new Date(b.problemDeadlineDate) - new Date(a.problemDeadlineDate)));
     };
 
     const highestReward = problems.length > 0 ? Math.max(...problems.map(p => p.problemReward)) : 0;
@@ -71,67 +69,92 @@ function Home() {
 
     return (
         <>
-            <Paper elevation={0} sx={{ padding: theme.spacing(3) }}>
-                <Typography variant="h4" gutterBottom>
-                    Problem Statistics
-                </Typography>
-                <Grid container spacing={3}>
-                    <Grid item xs={12} sm={4}>
-                        <Card>
-                            <CardContent>
-                                <Typography variant="h5" gutterBottom>
-                                    Total Problems
-                                </Typography>
-                                <Typography variant="h6">{problems.length}</Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                        <Card>
-                            <CardContent>
-                                <Typography variant="h5" gutterBottom>
-                                    Highest Reward
-                                </Typography>
-                                <Typography variant="h6">
-                                    ₹{new Intl.NumberFormat('en-IN').format(highestReward)}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                        <Card>
-                            <CardContent>
-                                <Typography variant="h5" gutterBottom>
-                                    Closest Deadline
-                                </Typography>
-                                <Typography variant="h6">
-                                    {closestDeadline ? new Date(closestDeadline.problemDeadlineDate).toLocaleDateString('en-US') : 'N/A'}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                </Grid>
-            </Paper >
+            <Paper elevation={0} sx={{ padding: theme.spacing(1), display: 'flex', justifyContent: 'center' }}>
+                <Stack direction="row" spacing={2} alignItems="center">
+                    <Chip
+                        icon={<SortIcon sx={{ color: 'white' }} />}
+                        label={`Total Problems: ${problems.length}`}
+                        color="primary"
+                        variant="filled" // Use filled variant for background color
+                        sx={{
+                            borderRadius: 0,
+                            backgroundColor: theme.palette.primary.main,
+                            color: 'white',
+                            fontSize: "25px",
+                            padding: "25px"
+                        }}
+                    />
+                    <Chip
+                        icon={<MonetizationOnIcon sx={{ color: 'white' }} />}
+                        label={`Highest Reward: ₹${new Intl.NumberFormat('en-IN').format(highestReward)}`}
+                        color="success"
+                        variant="filled"
+                        sx={{
+                            borderRadius: 0,
+                            backgroundColor: theme.palette.success.main, // Set the background color
+                            color: 'white',
+                            fontSize: "25px",
+                            padding: "25px"
+                        }}
+                    />
+                    <Chip
+                        icon={<EventIcon sx={{ color: 'white' }} />}
+                        label={`Closest Deadline: ${closestDeadline
+                            ? new Date(closestDeadline.problemDeadlineDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                            : 'N/A'
+                            }`}
+                        color="warning"
+                        variant="filled"
+                        sx={{
+                            borderRadius: 0,
+                            backgroundColor: theme.palette.warning.main,
+                            color: 'white',
+                            fontSize: "25px",
+                            padding: "25px"
+                        }}
+                    />
+
+
+
+                </Stack>
+            </Paper>
             <Paper elevation={0} sx={{ ml: 2 }}>
 
                 <Stack direction="row" alignItems="center" sx={{ mt: 2, mb: 1 }}>
                     <SortIcon sx={{ mr: 1 }} />
-                    <Typography variant="h6">
+                    <Typography variant="h6" sx={{ mr: 1 }}>
                         Sort By:
                     </Typography>
                     <Button
+                        variant="outlined"
                         startIcon={<MonetizationOnIcon />}
-                        onClick={sortProblemsByReward}
-                        sx={{ ml: 1 }}
+                        onClick={() => sortProblemsByReward()}
+                        sx={{ mr: 1 }}
+                    >
+                        Lowest Reward
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        startIcon={<MonetizationOnIcon />}
+                        onClick={() => sortProblemsByReward(false)}
+                        sx={{ mr: 1 }}
                     >
                         Highest Reward
                     </Button>
                     <Button
+                        variant="outlined"
                         startIcon={<EventIcon />}
-                        onClick={sortProblemsByDeadline}
-                        sx={{ ml: 1 }}
+                        onClick={() => sortProblemsByDeadline()}
+                        sx={{ mr: 1 }}
                     >
                         Closest Deadline
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        startIcon={<EventIcon />}
+                        onClick={() => sortProblemsByDeadline(false)}
+                    >
+                        Farthest Deadline
                     </Button>
                 </Stack>
 
