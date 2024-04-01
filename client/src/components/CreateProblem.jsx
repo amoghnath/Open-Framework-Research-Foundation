@@ -242,7 +242,7 @@ function CreateProblemForm() {
                             <InputLabel htmlFor='problemReward'>Reward</InputLabel>
                             <OutlinedInput
                                 id='problemReward'
-                                startAdornment={<InputAdornment position='start'>$</InputAdornment>}
+                                startAdornment={<InputAdornment position='start'>INR</InputAdornment>}
                                 {...register('problemReward')}
                                 error={!!errors.problemReward}
                                 aria-describedby='problemReward-text'
