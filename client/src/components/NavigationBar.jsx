@@ -162,7 +162,7 @@ export default function NavigationBar() {
                                 open={Boolean(profileMenuAnchorEl)}
                                 onClose={() => handleCloseMenu(setProfileMenuAnchorEl)}
                             >
-                                <MenuItem onClick={() => handleNavigate('/my-profile')}>
+                                <MenuItem onClick={() => handleNavigate('/profile')}>
                                     <ListItemIcon>
                                         <FaceIcon />
                                     </ListItemIcon>

@@ -102,7 +102,7 @@ function ProblemDetails() {
         }
     }, [problemId])
 
-    const handleSolutionSubmission = () => navigate(`/${problemId}`)
+    const handleSolutionSubmission = () => navigate(`/submit-solution/${problemId}`)
     const handleRegistrationNavigation = () => navigate('/register/solver')
     const handleLoginNavigation = () => navigate('/login')
 

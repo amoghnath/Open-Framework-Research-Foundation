@@ -1,4 +1,5 @@
 const { Solution } = require("../../models/Solution");
+const { Problem } = require("../../models/Problem");
 const jwt = require("jsonwebtoken");
 
 const solutionController = {
@@ -64,9 +65,13 @@ const solutionController = {
                 return res.status(400).json({ message: "Unable to identify solver from token" });
             }
 
-            // Fetch all solutions for the solver
+            // Fetch all solutions for the solver including the associated problem details
             const solutions = await Solution.findAll({
-                where: { solverId: solverId }
+                where: { solverId: solverId },
+                include: [{
+                    model: Problem,
+                    required: true
+                }]
             });
 
             if (!solutions || solutions.length === 0) {
@@ -82,6 +87,7 @@ const solutionController = {
             res.status(500).json({ message: "Error fetching solutions", error: error.message });
         }
     }
+
 };
 
 module.exports = solutionController;

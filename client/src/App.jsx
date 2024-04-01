@@ -14,10 +14,31 @@ const SolverRegistrationForm = React.lazy(() => import('./components/SolverRegis
 const CreateProblemForm = React.lazy(() => import('./components/CreateProblem'))
 const ProblemDetails = React.lazy(() => import('./components/ProblemDetails'))
 const SolutionForm = React.lazy(() => import('./components/CreateSolution'));
+const Profile = React.lazy(() => import('./components/Profile'));
 
 function LoggedInAuthRoute({ children }) {
   const { isAuthenticated } = useAuth()
   return isAuthenticated ? <Navigate to='/' /> : children
+}
+
+function SolverPrivateRoute({ children }) {
+  const { isAuthenticated, currentUser } = useAuth();
+
+  if (!isAuthenticated) {
+    return <Navigate to='/login' />;
+  }
+
+  return currentUser?.role === 'solver' ? children : <Navigate to='/' />;
+}
+
+function UploaderPrivateRoute({ children }) {
+  const { isAuthenticated, currentUser } = useAuth();
+
+  if (!isAuthenticated) {
+    return <Navigate to='/login' />;
+  }
+
+  return currentUser?.role === 'uploader' ? children : <Navigate to='/' />;
 }
 
 function PrivateRoute({ children }) {
@@ -81,21 +102,29 @@ function App() {
                   <Route
                     path='/create-problem'
                     element={
-                      <PrivateRoute>
+                      <UploaderPrivateRoute>
                         <CreateProblemForm />
-                      </PrivateRoute>
+                      </UploaderPrivateRoute>
                     }
+                  />
+                  <Route path='/submit-solution/:problemId' element={
+                    <PrivateRoute>
+                      <SolutionForm />
+                    </PrivateRoute>
+                  }
                   />
                   <Route
                     path='/problems/:problemId'
                     element={<ProblemDetails />}
-                  />{' '}
-
-                  <Route path='/:problemId' element={
-                    <PrivateRoute>
-                      <SolutionForm />
-                    </PrivateRoute>
-                  } />
+                  />
+                  <Route
+                    path='/profile'
+                    element={
+                      <PrivateRoute>
+                        <Profile />
+                      </PrivateRoute>
+                    }
+                  />
                 </Routes>
               </Suspense>
             </main>

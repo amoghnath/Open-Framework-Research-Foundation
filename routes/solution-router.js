@@ -57,4 +57,5 @@ router.get("/", authenticateToken, solutionController.readAllBySolver);
  *         description: Access forbidden - user is not in the solver role
  */
 router.post("/:problemId", authenticateToken, requireRole("solver"), solutionController.create);
+
 module.exports = router;
