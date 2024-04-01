@@ -11,6 +11,7 @@ import {
     Paper,
     Box,
     IconButton,
+    Stack,
     CardActions // Import CardActions
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -70,31 +71,72 @@ function Home() {
 
     return (
         <>
-            <Paper sx={{ padding: theme.spacing(3), margin: theme.spacing(3, 1) }}>
+            <Paper elevation={0} sx={{ padding: theme.spacing(3) }}>
                 <Typography variant="h4" gutterBottom>
-                    Problem Dashboard
+                    Problem Statistics
                 </Typography>
-                <Typography variant="h6">
-                    Total Problems: {problems.length}
-                </Typography>
-                <Typography variant="h6">
-                    Highest Reward: ₹{new Intl.NumberFormat('en-IN').format(highestReward)}
-                </Typography>
-                <Typography variant="h6">
-                    Closest Deadline: {closestDeadline ? new Date(closestDeadline.problemDeadlineDate).toLocaleDateString() : 'N/A'}
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-                    <Typography variant="h6" sx={{ mr: 1 }}>
+                <Grid container spacing={3}>
+                    <Grid item xs={12} sm={4}>
+                        <Card>
+                            <CardContent>
+                                <Typography variant="h5" gutterBottom>
+                                    Total Problems
+                                </Typography>
+                                <Typography variant="h6">{problems.length}</Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                        <Card>
+                            <CardContent>
+                                <Typography variant="h5" gutterBottom>
+                                    Highest Reward
+                                </Typography>
+                                <Typography variant="h6">
+                                    ₹{new Intl.NumberFormat('en-IN').format(highestReward)}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                        <Card>
+                            <CardContent>
+                                <Typography variant="h5" gutterBottom>
+                                    Closest Deadline
+                                </Typography>
+                                <Typography variant="h6">
+                                    {closestDeadline ? new Date(closestDeadline.problemDeadlineDate).toLocaleDateString('en-US') : 'N/A'}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                </Grid>
+            </Paper >
+            <Paper elevation={0} sx={{ ml: 2 }}>
+
+                <Stack direction="row" alignItems="center" sx={{ mt: 2, mb: 1 }}>
+                    <SortIcon sx={{ mr: 1 }} />
+                    <Typography variant="h6">
                         Sort By:
                     </Typography>
-                    <IconButton onClick={sortProblemsByReward}>
-                        <MonetizationOnIcon />
-                    </IconButton>
-                    <IconButton onClick={sortProblemsByDeadline}>
-                        <EventIcon />
-                    </IconButton>
-                </Box>
+                    <Button
+                        startIcon={<MonetizationOnIcon />}
+                        onClick={sortProblemsByReward}
+                        sx={{ ml: 1 }}
+                    >
+                        Highest Reward
+                    </Button>
+                    <Button
+                        startIcon={<EventIcon />}
+                        onClick={sortProblemsByDeadline}
+                        sx={{ ml: 1 }}
+                    >
+                        Closest Deadline
+                    </Button>
+                </Stack>
+
             </Paper>
+
             <Grid container spacing={4} padding={2} style={{ marginTop: 5, paddingTop: 0 }}>
                 {problems.map((problem) => (
                     <Grid item xs={12} sm={6} md={4} key={problem.problemId}>
