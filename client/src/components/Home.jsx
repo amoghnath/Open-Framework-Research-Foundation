@@ -72,33 +72,33 @@ function Home() {
             <Paper elevation={0} sx={{ padding: theme.spacing(1), display: 'flex', justifyContent: 'center' }}>
                 <Stack direction="row" spacing={2} alignItems="center">
                     <Chip
-                        icon={<SortIcon sx={{ color: 'white' }} />}
+                        icon={<SortIcon sx={{ color: '#33a2ff !important', }} />}
                         label={`Total Problems: ${problems.length}`}
                         color="primary"
                         variant="filled" // Use filled variant for background color
                         sx={{
                             borderRadius: 0,
-                            backgroundColor: theme.palette.primary.main,
+                            backgroundColor: 'black',
                             color: 'white',
                             fontSize: "25px",
                             padding: "25px"
                         }}
                     />
                     <Chip
-                        icon={<MonetizationOnIcon sx={{ color: 'white' }} />}
+                        icon={<MonetizationOnIcon sx={{ color: '#ffee85 !important' }} />}
                         label={`Highest Reward: ₹${new Intl.NumberFormat('en-IN').format(highestReward)}`}
                         color="success"
                         variant="filled"
                         sx={{
                             borderRadius: 0,
-                            backgroundColor: theme.palette.success.main, // Set the background color
+                            backgroundColor: 'black', // Set the background color
                             color: 'white',
                             fontSize: "25px",
                             padding: "25px"
                         }}
                     />
                     <Chip
-                        icon={<EventIcon sx={{ color: 'white' }} />}
+                        icon={<EventIcon sx={{ color: '#ff8585 !important' }} />}
                         label={`Closest Deadline: ${closestDeadline
                             ? new Date(closestDeadline.problemDeadlineDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
                             : 'N/A'
@@ -107,7 +107,7 @@ function Home() {
                         variant="filled"
                         sx={{
                             borderRadius: 0,
-                            backgroundColor: theme.palette.warning.main,
+                            backgroundColor: 'black',
                             color: 'white',
                             fontSize: "25px",
                             padding: "25px"
@@ -177,7 +177,7 @@ function Home() {
                                 {isNewProblem(problem.createdAt) ? (
                                     <Chip
                                         icon={<NewIcon />}
-                                        label="New"
+                                        label="New Problem"
                                         color="secondary"
                                         variant="outlined"
                                         sx={{ marginTop: '8px' }}
@@ -185,7 +185,7 @@ function Home() {
                                 ) : (
                                     <Chip
                                         icon={<HistoryIcon />}  // Use an appropriate icon for old items
-                                        label="Old"
+                                        label="Old Problem"
                                         color="default"
                                         variant="outlined"
                                         sx={{ marginTop: '8px' }}
