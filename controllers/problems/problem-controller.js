@@ -4,17 +4,50 @@ const { Solution } = require("../../models/Solution");
 const { Solver } = require("../../models/Solver");
 
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+
+const sendProblemNotificationEmails = async (solverEmails, problemDetails) => {
+    const transporter = nodemailer.createTransport({
+        service: "Gmail",
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+            user: "amoghnath23@gmail.com",
+            pass: "yfal pgvv cdot awat",
+        },
+    });
+
+    for (const email of solverEmails) {
+        const mailOptions = {
+            from: '"Problem Notification" <amoghnath23@gmail.com>',
+            to: email,
+            subject: `New Problem Created: ${problemDetails.problemTitle}`,
+            html: `
+                <h1>${problemDetails.problemTitle}</h1>
+                <p>${problemDetails.problemDescription}</p>
+                <p>Reward: ${problemDetails.problemReward}</p>
+                <p>Deadline: ${problemDetails.problemDeadlineDate}</p>
+            `,
+        };
+
+        try {
+            const info = await transporter.sendMail(mailOptions);
+            console.log("Email sent: %s", info.messageId);
+        } catch (error) {
+            console.error("Failed to send email:", error);
+        }
+    }
+};
 
 const problemController = {
     async create(req, res) {
         try {
-            // Extract the JWT from the cookie
             const token = req.cookies["user-session-token"];
             if (!token) {
                 return res.status(401).json({ message: "No token provided, cannot identify uploader" });
             }
 
-            // Decode the JWT to get the uploaderId
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             const uploaderId = decoded.uploaderId;
 
@@ -22,10 +55,8 @@ const problemController = {
                 return res.status(400).json({ message: "Unable to identify uploader from token" });
             }
 
-            // Extract problem details from the request body
             const { problemTitle, problemDescription, problemReward, problemDeadlineDate } = req.body;
 
-            // Create a new problem record
             const newProblem = await Problem.create({
                 uploaderId,
                 problemTitle,
@@ -34,15 +65,25 @@ const problemController = {
                 problemDeadlineDate
             });
 
+            const solvers = await Solver.findAll({ attributes: ["solverEmail"] });
+            const solverEmails = solvers.map(solver => solver.solverEmail);
+
+            const problemDetails = {
+                problemTitle,
+                problemDescription,
+                problemReward,
+                problemDeadlineDate,
+            };
+
+            await sendProblemNotificationEmails(solverEmails, problemDetails);
+
             res.status(201).json({
                 message: "Problem created successfully",
                 problem: newProblem
             });
 
         } catch (error) {
-            if (error.name === "JsonWebTokenError") {
-                return res.status(401).json({ message: "Invalid token" });
-            }
+            console.error("Problem creation error:", error);
             res.status(500).json({ message: "Error creating problem", error: error.message });
         }
     },

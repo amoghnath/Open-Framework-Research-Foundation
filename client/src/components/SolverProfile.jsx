@@ -8,13 +8,17 @@ import {
     Stack,
     Paper,
     Button,
+    Grid,
+    Avatar
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import EventIcon from '@mui/icons-material/Event';
 import UpdateIcon from '@mui/icons-material/Update';
 import CreateIcon from '@mui/icons-material/Create';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'; // Icon for the button
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import PersonIcon from '@mui/icons-material/Person';
+import EmailIcon from '@mui/icons-material/Email';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -22,6 +26,31 @@ const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
     return new Date(dateString).toLocaleDateString(undefined, options);
 };
+
+// const UserInfo = ({ user }) => (
+//     <Paper elevation={3} sx={{ p: 3, mb: 4, mt: 2 }}>
+//         <Grid container spacing={2} alignItems="center">
+//             <Grid item xs={12} sm={3} display="flex" justifyContent="center">
+//                 <Avatar sx={{ width: 100, height: 100 }}>
+//                     <PersonIcon sx={{ fontSize: 60 }} />
+//                 </Avatar>
+//             </Grid>
+//             <Grid item xs={12} sm={9}>
+//                 <Typography variant="h6" sx={{ mb: 1 }}>
+//                     {user.solverFullName}
+//                 </Typography>
+//                 <Typography variant="body1">
+//                     <EmailIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
+//                     {user.solverEmail}
+//                 </Typography>
+//                 <Typography variant="body1">
+//                     <EmailIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
+//                     {user.solverPhoneNumber}
+//                 </Typography>
+//             </Grid>
+//         </Grid>
+//     </Paper>
+// );
 
 const SolutionItem = ({ solution }) => {
     const navigate = useNavigate();
@@ -77,6 +106,10 @@ const SolutionsProfile = () => {
 
     useEffect(() => {
         const fetchSolutions = async () => {
+            if (!currentUser || currentUser.role !== 'solver') {
+                return;
+            }
+
             try {
                 const response = await fetch('/api/solution/solver-profile', {
                     method: 'GET',
@@ -95,17 +128,16 @@ const SolutionsProfile = () => {
             }
         };
 
-        if (currentUser?.role === 'solver') {
-            fetchSolutions();
-        }
-    }, [currentUser]);
+        fetchSolutions();
+    }, [currentUser]); // Ensure currentUser is in the dependency array
 
-    if (currentUser?.role !== 'solver') {
+    if (!currentUser || currentUser.role !== 'solver') {
         return null;
     }
 
     return (
         <Paper sx={{ m: 2, p: 2 }} elevation={0}>
+            {/* {currentUser && <UserInfo user={currentUser} />} */}
             <Typography variant="h4" gutterBottom sx={{ pt: 2 }}>
                 Solutions Submitted
             </Typography>
