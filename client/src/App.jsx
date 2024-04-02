@@ -1,12 +1,15 @@
-import React, { Suspense } from 'react'
-import './App.css'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import NavigationBar from './components/NavigationBar'
-import Login from './components/Login'
-import Home from './components/Home'
-import { AuthProvider, useAuth } from './context/AuthContext'
-import { SnackbarProvider } from './context/SnackBarContext'
-import { CircularProgress, Box } from '@mui/material'
+import React, { Suspense, useState } from 'react';
+import './App.css';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import NavigationBar from './components/NavigationBar';
+import Login from './components/Login';
+import Home from './components/Home';
+import ChatBotNew from './components/ChatBot'; // Assuming ChatBotNew is in the components folder
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { SnackbarProvider } from './context/SnackBarContext';
+import { CircularProgress, Box, Button } from '@mui/material';
+
+import ForumIcon from '@mui/icons-material/Forum';
 
 const UploaderRegistrationForm = React.lazy(() => import('./components/UploaderRegistration'))
 const SolverRegistrationForm = React.lazy(() => import('./components/SolverRegistration'))
@@ -15,6 +18,8 @@ const ProblemDetails = React.lazy(() => import('./components/ProblemDetails'))
 const SolutionForm = React.lazy(() => import('./components/CreateSolution'));
 const SolverProfile = React.lazy(() => import('./components/SolverProfile'));
 const UploaderProfile = React.lazy(() => import('./components/UploaderProfile'));
+
+
 
 function LoggedInAuthRoute({ children }) {
   const { isAuthenticated } = useAuth()
@@ -47,6 +52,10 @@ function PrivateRoute({ children }) {
 }
 
 function App() {
+  const [showChatBot, setShowChatBot] = useState(false);
+
+  const toggleChatBot = () => setShowChatBot(!showChatBot);
+
   return (
     <AuthProvider>
       <SnackbarProvider>
@@ -127,6 +136,10 @@ function App() {
                 />
               </Routes>
             </Suspense>
+            <Button onClick={toggleChatBot} style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 1000 }}>
+              <ForumIcon style={{ padding: "1.6rem", border: 'solid black 1px', color: 'black', fontSize: '2rem', backgroundColor: 'white', borderRadius: '1.6rem' }} />
+            </Button>
+            {showChatBot && <ChatBotNew onClose={toggleChatBot} />}
           </main>
         </Router>
       </SnackbarProvider>

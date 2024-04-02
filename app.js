@@ -9,6 +9,7 @@ const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+const geminiRouter = require('./routes/gemini-router');
 
 // Model Imports
 const { UploaderSwaggerSchema } = require("./models/Uploader");
@@ -83,6 +84,7 @@ app.use("/api/auth", loginRouter);
 app.use("/api/register", registrationRouter);
 app.use("/api/problem", problemRouter);
 app.use("/api/solution", solutionRouter);
+app.use('/api/gemini', geminiRouter);
 
 app.get("/", (req, res) => res.send("Express server running on port 3000"));
 
