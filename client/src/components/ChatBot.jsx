@@ -164,7 +164,8 @@ const ChatBotNew = ({ onClose }) => {
                                     width: '100%',
                                     borderRadius: '10px',
                                     backgroundColor: 'white',
-                                    color: 'black' // Ensure text is black for readability
+                                    color: 'black', // Ensure text is black for readability
+                                    fontFamily: 'Sans Serif'
                                 }}
                             >
                                 {chatItem.role} : {chatItem.parts}
