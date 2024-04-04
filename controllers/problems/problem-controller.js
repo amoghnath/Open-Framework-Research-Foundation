@@ -14,7 +14,7 @@ const sendProblemNotificationEmails = async (solverEmails, problemDetails) => {
         secure: true,
         auth: {
             user: "amoghnath23@gmail.com",
-            pass: "yfal pgvv cdot awat",
+            pass: `${process.env.NODEMAILER_GOOGLE_APP_PASS}`,
         },
     });
 
